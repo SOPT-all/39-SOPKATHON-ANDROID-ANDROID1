@@ -54,9 +54,13 @@ fun NolItChallengeTabs(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .clip(RoundedCornerShape(20.dp))
+                    .fillMaxHeight()
                     .then(
-                        if (selected) Modifier.background(NolItTheme.colors.primary) else Modifier,
+                        if (selected) {
+                            Modifier.background(NolItTheme.colors.primary, RoundedCornerShape(20.dp))
+                        } else {
+                            Modifier
+                        },
                     )
                     .selectable(
                         selected = selected,
