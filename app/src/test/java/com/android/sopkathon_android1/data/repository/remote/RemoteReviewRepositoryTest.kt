@@ -10,6 +10,7 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import retrofit2.Retrofit
@@ -41,6 +42,32 @@ class RemoteReviewRepositoryTest {
         }
         assertEquals(500, failure.httpStatus)
         assertEquals("INTERNAL_SERVER_ERROR", failure.code)
+    }
+
+    @Test fun `좋아요 토글 응답으로 서버 상태와 개수를 반영한다`() = runTest {
+        val repository = repository { request ->
+            assertEquals("POST", request.method)
+            assertEquals("/v1/reviews/7/likes", request.url.encodedPath)
+            response(request, 200, """{"status":200,"code":"REVIEW_LIKE_TOGGLED","message":"ok","data":{"reviewId":7,"isLiked":false,"likeCount":3}}""")
+        }
+        val result = repository.toggleLike(7)
+        assertEquals(7L, result.reviewId)
+        assertFalse(result.isLiked)
+        assertEquals(3, result.likeCount)
+    }
+
+    @Test fun `좋아요 토글 실패 코드를 보존한다`() = runTest {
+        val repository = repository { request ->
+            response(request, 404, """{"status":404,"code":"REVIEW_NOT_FOUND","message":"존재하지 않는 인증글입니다."}""")
+        }
+        val failure = try {
+            repository.toggleLike(7)
+            error("실패해야 합니다")
+        } catch (error: ReviewLikeException) {
+            error
+        }
+        assertEquals(404, failure.httpStatus)
+        assertEquals("REVIEW_NOT_FOUND", failure.code)
     }
 
     private fun repository(handler: (Request) -> Response): RemoteReviewRepository {

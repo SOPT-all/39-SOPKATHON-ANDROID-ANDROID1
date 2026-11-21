@@ -12,6 +12,7 @@ import com.android.sopkathon_android1.data.repository.ImageRepository
 import com.android.sopkathon_android1.data.repository.MissionCompletionRepository
 import com.android.sopkathon_android1.data.repository.MissionBasketRepository
 import com.android.sopkathon_android1.data.repository.ReviewRepository
+import com.android.sopkathon_android1.data.repository.ReviewLikeResult
 import com.android.sopkathon_android1.data.model.MissionVerificationResult
 import com.android.sopkathon_android1.data.repository.remote.ImageUploadException
 import com.android.sopkathon_android1.data.repository.remote.MissionCompletionException
@@ -91,13 +92,16 @@ class HyeminDetailViewModelTest {
     @Test fun `상세 완료 후 목록을 재조회하면 완료 상태가 반영된다`() = runTest {
         val repository = FakeHyeminRepository(FakeHyeminDataSource(), FakeHyeminReviewDataSource())
         val list = HyeminViewModel(
-            repository,
             object : MissionBasketRepository {
                 override suspend fun getMissions() = repository.getMissions()
                 override suspend fun getMissionDetail(missionId: Long) = repository.getMissionDetail(missionId)
             },
             object : ReviewRepository {
                 override suspend fun getReviews() = repository.getReviews()
+                override suspend fun toggleLike(reviewId: Long): ReviewLikeResult {
+                    val review = repository.toggleReviewLike(reviewId)
+                    return ReviewLikeResult(review.reviewId, review.isLiked, review.likeCount)
+                }
             },
         )
         val detail = viewModel(repository, "12")

@@ -7,6 +7,7 @@ import com.android.sopkathon_android1.data.datasource.fake.FakeHyeminScenario
 import com.android.sopkathon_android1.data.repository.fake.FakeHyeminRepository
 import com.android.sopkathon_android1.data.repository.MissionBasketRepository
 import com.android.sopkathon_android1.data.repository.ReviewRepository
+import com.android.sopkathon_android1.data.repository.ReviewLikeResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -22,13 +23,16 @@ class HyeminViewModelTest {
     @After fun cleanup() { Dispatchers.resetMain() }
 
     private fun viewModel(repository: FakeHyeminRepository) = HyeminViewModel(
-        repository,
         object : MissionBasketRepository {
             override suspend fun getMissions() = repository.getMissions()
             override suspend fun getMissionDetail(missionId: Long) = repository.getMissionDetail(missionId)
         },
         object : ReviewRepository {
             override suspend fun getReviews() = repository.getReviews()
+            override suspend fun toggleLike(reviewId: Long): ReviewLikeResult {
+                val review = repository.toggleReviewLike(reviewId)
+                return ReviewLikeResult(review.reviewId, review.isLiked, review.likeCount)
+            }
         },
     )
 

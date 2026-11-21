@@ -3,7 +3,6 @@ package com.android.sopkathon_android1.feature.hyemin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.sopkathon_android1.core.designsystem.component.ChallengeTab
-import com.android.sopkathon_android1.data.repository.HyeminRepository
 import com.android.sopkathon_android1.data.repository.MissionBasketRepository
 import com.android.sopkathon_android1.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,13 +16,13 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class HyeminViewModel @Inject constructor(
-    private val repository: HyeminRepository,
     private val missionBasketRepository: MissionBasketRepository,
     private val reviewRepository: ReviewRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HyeminUiState())
     val uiState = _uiState.asStateFlow()
     private var loadJob: Job? = null
+    private val pendingLikes = mutableSetOf<Long>()
 
     init { loadMissions() }
 
@@ -51,17 +50,24 @@ class HyeminViewModel @Inject constructor(
     }
 
     fun toggleReviewLike(reviewId: Long) {
+        if (!pendingLikes.add(reviewId)) return
         viewModelScope.launch {
             try {
-                val review = repository.toggleReviewLike(reviewId)
+                val result = reviewRepository.toggleLike(reviewId)
                 _uiState.update { state -> state.copy(
-                    reviews = state.reviews.map { if (it.reviewId == reviewId) review else it },
+                    reviews = state.reviews.map { review ->
+                        if (review.reviewId == result.reviewId) {
+                            review.copy(isLiked = result.isLiked, likeCount = result.likeCount)
+                        } else review
+                    },
                     likeError = false,
                 ) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 _uiState.update { it.copy(likeError = true) }
+            } finally {
+                pendingLikes.remove(reviewId)
             }
         }
     }
