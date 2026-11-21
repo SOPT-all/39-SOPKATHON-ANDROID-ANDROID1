@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -73,13 +72,5 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             composable<HeejinRoute> { HeejinScreen() }
             composable<SeungyeonRoute> { SeungyeonScreen() }
         }
-    }
-}
-
-private fun <T : Any> NavHostController.navigateToTab(route: T) {
-    navigate(route) {
-        popUpTo(graph.startDestinationId) { saveState = true }
-        launchSingleTop = true
-        restoreState = true
     }
 }
