@@ -39,8 +39,106 @@
 - 의존성 주입: Hilt.
 - 아키텍처: Google 권장 앱 아키텍처를 따르는 MVVM. UI는 화면과 ViewModel, 데이터 계층은 저장소와 데이터 소스로 구성한다. 도메인 계층은 필요할 때만 추가한다.
 - UI 상태는 ViewModel에서 관리하고 화면에는 상태와 이벤트를 전달한다.
-- 공통 UI 테마·컴포넌트는 `core/designsystem`, 화면 이동은 `core/navigation`, 기능 화면은 `feature`, API DTO는 `data/dto`에 둔다.
+- 공통 UI 테마·컴포넌트는 `core/designsystem`, 앱 전체 NavHost와 공통 화면 이동 처리는 `core/navigation`, 기능별 경로·이동 함수·그래프 등록은 `feature/<기능>/navigation`, 기능 화면은 `feature`, API DTO는 `data/dto`에 둔다.
 - API 응답 모델은 `data/dto/base/BaseResponse.kt`의 `status`, `code`, `message`, nullable `data` 형식을 기준으로 한다. 화면 분기는 `message`가 아닌 `code`를 사용한다. 실제 서버 주소나 개별 응답 필드는 API 명세가 확인되기 전까지 추측해서 추가하지 않는다.
 - 의존성 버전은 `gradle/libs.versions.toml`에서 관리한다.
 
+## 화면 연결과 데이터 흐름
+
+기능별 `navigation/<화면명>Navigation.kt`에 직렬화 가능한 경로 객체 `<화면명>`, `NavController.navigateTo<화면명>()` 이동 함수, `NavGraphBuilder.<화면명>NavGraph()` 경로 등록 함수를 둔다. 예를 들어 은지 화면의 경로 객체 이름은 `Eunji`이며 `Destination` 접미사를 붙이지 않는다.
+
+ViewModel의 상태·이벤트를 연결하는 `<화면명>Route`와 UI를 표시하는 `<화면명>Screen`은 같은 `<화면명>Screen.kt` 파일에 둔다. 일반 화면 Preview 하나도 이 파일에 둔다. 단순 진입 화면이나 정적 화면은 별도 Route Composable 없이 Screen을 등록해도 된다. 내비게이션 대상인 경우에는 경로 식별자가 필요하다.
+
+모든 데이터 기반 기능 화면은 은지 화면을 기준 예제로 삼아 같은 Mock → 서버 교체 구조를 적용한다. 현재 동작하는 Mock 조회 연결은 은지에 먼저 구현되어 있다. 혜민·희진·승연은 내비게이션과 Route·Screen 기본 구성이 준비되어 있으며, 각 기능 개발 시 아래 적용 절차에 따라 해당 기능의 ViewModel·Repository·Fake 데이터 소스를 연결한다. Main은 화면 선택 안내만 표시하는 단순 진입 화면이며, 별도 Route Composable이나 ViewModel을 두지 않는다. Main의 경로 객체는 `Main`이고 `mainNavGraph()`에서 `MainScreen()`을 직접 호출한다.
+
+| 구성 | 역할 | 은지 화면 예시 |
+| --- | --- | --- |
+| 경로 객체 | 직렬화 가능한 내비게이션 경로 식별자 | `Eunji` |
+| 이동 함수 | NavController에 화면 이동 요청 | `navigateToEunji()` |
+| 그래프 등록 | 경로를 등록하고 Route 호출 | `eunjiNavGraph()` |
+| NavHost | 기능별 그래프 조합, 화면 이동 콜백 연결 | `AppNavHost` |
+| Route | Hilt로 ViewModel을 얻고 상태를 구독해 Screen에 상태와 이벤트 전달 | `EunjiRoute` |
+| Screen | 전달받은 상태로 UI를 표시하고 사용자 이벤트 전달 | `EunjiScreen` |
+| ViewModel | Repository를 호출하고 UI 상태 및 조회 작업 관리 | `EunjiViewModel` |
+| Repository | UI 계층이 사용할 데이터 조회 계약과 구현 | `EunjiRepository`, `FakeEunjiRepository` |
+| DataSource | Mock 또는 원격 데이터 조회 | `FakeEunjiDataSource` |
+
+현재 앱의 진입·조회·화면 갱신 흐름은 다음과 같다.
+
+```text
+MainActivity
+  → AppNavHost
+    → 시작: mainNavGraph() → composable<Main> { MainScreen() } (화면 선택 안내)
+    → 은지 탭 선택: navigateToTab(Eunji)
+      → eunjiNavGraph()에 등록된 composable<Eunji>
+        → EunjiRoute: Hilt ViewModel 획득, collectAsStateWithLifecycle() 구독
+          → EunjiScreen(uiState, onRetry): UI 표시
+
+EunjiViewModel: 진입 시 loadItems()
+  → EunjiRepository.getItems()
+    → Hilt가 주입한 FakeEunjiRepository
+      → FakeEunjiDataSource: 임시 목록 반환
+  → EunjiUiState 갱신: Loading → Success / Empty / Error
+    → StateFlow 구독을 통해 EunjiScreen 갱신
+
+EunjiScreen에서 다시 시도
+  → EunjiRoute가 전달한 onRetry
+    → EunjiViewModel.loadItems()
+```
+
+Screen에서 ViewModel이나 NavController를 직접 얻지 않는다. 화면 이동이 필요하면 NavHost에서 Route로 이동 콜백을 전달하고, Route가 Screen 이벤트와 연결한다. 현재 탭 선택과 백스택 처리는 `AppNavHost`와 `navigateToTab()`이 담당한다. 별도 `MainAppState`는 아직 도입하지 않았다.
+
+은지 화면의 파일 구성은 다음과 같다. 일반 화면 이동에는 `navigateToEunji(navOptions)`를 사용하고, 하단 탭 이동에는 상태 저장·복원을 유지하는 기존 `navigateToTab(Eunji)`를 사용한다.
+
+```text
+feature/eunji/
+  navigation/EunjiNavigation.kt  # Eunji, navigateToEunji(), eunjiNavGraph()
+  EunjiScreen.kt                 # EunjiRoute(), EunjiScreen(), EunjiScreenPreview()
+  EunjiViewModel.kt
+  EunjiUiState.kt
+```
+
+혜민·희진·승연도 각각 `navigation/<화면명>Navigation.kt`에 경로·이동·그래프 등록을, `<화면명>Screen.kt`에 Route·Screen·일반 Preview 하나를 둔다. 데이터 연결은 각 화면의 확정된 요구사항에 맞게 은지와 같은 방식으로 구현한다. `AppNavHost`는 `mainNavGraph()`, `eunjiNavGraph()`, `hyeminNavGraph()`, `heejinNavGraph()`, `seungyeonNavGraph()`를 조합한다.
+
+### 다른 기능에도 은지와 같은 구조 적용
+
+은지 전용 기능으로 한정하지 않는다. 혜민·희진·승연 등 각 화면을 구현할 때 다음 순서로 연결한다. 아래 이름은 각 기능에 추가할 구성의 예시이며, 현재 모두 구현되어 있다는 뜻은 아니다.
+
+1. 해당 화면의 확정된 디자인·동작을 기준으로 화면용 모델과 `<기능명>Repository` 인터페이스를 정의한다. 은지의 임시 항목 필드나 목록 조회 함수를 요구사항 확인 없이 그대로 복사하지 않는다.
+2. 은지의 `FakeEunjiDataSource`와 `FakeEunjiRepository`를 참고해 해당 기능의 Fake 데이터 소스와 Repository 구현체를 만든다. 로딩·빈 결과·오류 등 해당 화면에 필요한 상태도 확인할 수 있게 한다.
+3. `RepositoryModule`과 `FakeDataSourceModule`에 해당 기능의 바인딩·제공 함수를 추가한다. 예를 들어 `HyeminRepository`에는 `FakeHyeminRepository`를 주입한다. 기존 은지 바인딩을 다른 기능의 바인딩으로 덮어쓰지 않는다.
+4. `EunjiViewModel`을 참고해 해당 기능의 ViewModel과 UI 상태를 만들고, ViewModel은 해당 기능의 Repository 인터페이스만 주입받는다.
+5. 기존 `<화면명>Screen.kt`의 Route에서 `hiltViewModel()`과 `collectAsStateWithLifecycle()`로 상태를 연결한다. Screen은 상태와 실제 UI에 필요한 이벤트 콜백만 받는다. `onRetry`도 재시도 UI가 있는 경우에 사용한다.
+6. 서버 구현이 준비되면 해당 기능의 Hilt 바인딩을 Fake에서 서버 Repository로 교체한다. 같은 조회 계약과 화면용 모델을 유지하면 Route·Screen·ViewModel을 다시 연결하지 않는다.
+
+```text
+각 기능의 NavGraph → Route → Screen
+                      ↕ 상태·이벤트
+                   ViewModel → Repository 인터페이스
+                                ├─ 개발 중: 해당 기능의 FakeRepository → FakeDataSource
+                                └─ 서버 준비 후: 서버 Repository → 원격 DataSource
+```
+
+각 기능은 자신의 Repository와 데이터 소스를 사용한다. 모든 화면이 `EunjiRepository`를 공유하는 방식으로 확장하지 않는다.
+
+### Mock 데이터 사용
+
+앱 실행 후 하단의 은지 탭을 선택한다. Main에서는 Mock 데이터를 조회하지 않는다.
+
+- `data/model/EunjiItem.kt`는 서버 DTO와 분리된 임시 화면용 모델이다. 실제 기능 요구사항이 정해지면 해당 모델과 조회 계약을 조정한다.
+- `data/di/RepositoryModule.kt`에서 `EunjiRepository`에 `FakeEunjiRepository`를 바인딩한다. ViewModel은 Fake 구현체를 직접 참조하지 않는다.
+- 같은 파일의 `FakeDataSourceModule.provideEunjiDataSource()`에서 `FakeEunjiScenario.SUCCESS`, `EMPTY`, `ERROR` 중 하나를 설정하고 다시 실행해 목록·빈 목록·오류 화면을 확인한다.
+- 기본 지연은 500ms이며, 이 동안 로딩을 표시한다. `ERROR` 시나리오는 재시도해도 실패한다.
+- `EunjiScreen.kt`에는 샘플 목록을 표시하는 `EunjiScreenPreview` 하나만 둔다. 별도의 상태별 Preview는 만들지 않고, 로딩·빈 목록·오류 화면은 Fake 시나리오로 앱에서 확인한다.
+
+### 서버 데이터로 교체
+
+1. API 명세 확정 후 요청·응답 DTO와 Retrofit API, 원격 데이터 소스를 구현한다.
+2. `EunjiRepository`의 서버 구현체(예: `RemoteEunjiRepository`)를 추가한다. DTO를 화면용 모델로 변환하고, 빈 목록·실패·코루틴 취소에 대한 계약을 유지한다. 실패는 예외로 전달하고 코루틴 취소를 삼키지 않는다.
+3. 원격 API와 데이터 소스를 Hilt에 등록한 후 `RepositoryModule.bindEunjiRepository()`의 구현체를 `FakeEunjiRepository`에서 서버 구현체로 교체한다. 사용하지 않는 Fake 데이터 소스 제공 모듈을 제거한다.
+4. Repository의 함수와 반환 모델이 유지되면 Route·Screen·ViewModel은 그대로 사용한다. API 명세에 따라 계약이나 화면 요구사항이 바뀌면 해당 부분도 조정한다.
+
+현재 Fake 구현은 모든 빌드에서 사용하므로 실제 배포 전에 서버 구현체로 교체한다. 서버 실패를 Mock 성공 데이터로 자동 대체하지 않는다.
+
 작업 후 관련 빌드를 확인한다. 기본 검증 명령은 `./gradlew :app:assembleDebug`이다.
+Mock 상태 전환·재시도·취소를 포함한 단위 테스트는 `./gradlew :app:testDebugUnitTest`로 확인한다.
