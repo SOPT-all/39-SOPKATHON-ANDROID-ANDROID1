@@ -10,19 +10,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.android.sopkathon_android1.feature.eunji.EunjiDestination
-import com.android.sopkathon_android1.feature.eunji.EunjiRoute
-import com.android.sopkathon_android1.feature.heejin.HeejinRoute
-import com.android.sopkathon_android1.feature.heejin.HeejinScreen
-import com.android.sopkathon_android1.feature.hyemin.HyeminRoute
-import com.android.sopkathon_android1.feature.hyemin.HyeminScreen
-import com.android.sopkathon_android1.feature.main.MainDestination
-import com.android.sopkathon_android1.feature.main.MainScreen
-import com.android.sopkathon_android1.feature.seungyeon.SeungyeonRoute
-import com.android.sopkathon_android1.feature.seungyeon.SeungyeonScreen
+import com.android.sopkathon_android1.feature.eunji.navigation.Eunji
+import com.android.sopkathon_android1.feature.eunji.navigation.eunjiNavGraph
+import com.android.sopkathon_android1.feature.heejin.navigation.Heejin
+import com.android.sopkathon_android1.feature.heejin.navigation.heejinNavGraph
+import com.android.sopkathon_android1.feature.hyemin.navigation.Hyemin
+import com.android.sopkathon_android1.feature.hyemin.navigation.hyeminNavGraph
+import com.android.sopkathon_android1.feature.main.navigation.Main
+import com.android.sopkathon_android1.feature.main.navigation.mainNavGraph
+import com.android.sopkathon_android1.feature.seungyeon.navigation.Seungyeon
+import com.android.sopkathon_android1.feature.seungyeon.navigation.seungyeonNavGraph
 
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
@@ -35,26 +34,26 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
-                    selected = currentDestination?.hasRoute<EunjiDestination>() == true,
-                    onClick = { navController.navigateToTab(EunjiDestination) },
+                    selected = currentDestination?.hasRoute<Eunji>() == true,
+                    onClick = { navController.navigateToTab(Eunji) },
                     icon = { Text("은") },
                     label = { Text("은지") },
                 )
                 NavigationBarItem(
-                    selected = currentDestination?.hasRoute<HyeminRoute>() == true,
-                    onClick = { navController.navigateToTab(HyeminRoute) },
+                    selected = currentDestination?.hasRoute<Hyemin>() == true,
+                    onClick = { navController.navigateToTab(Hyemin) },
                     icon = { Text("혜") },
                     label = { Text("혜민") },
                 )
                 NavigationBarItem(
-                    selected = currentDestination?.hasRoute<HeejinRoute>() == true,
-                    onClick = { navController.navigateToTab(HeejinRoute) },
+                    selected = currentDestination?.hasRoute<Heejin>() == true,
+                    onClick = { navController.navigateToTab(Heejin) },
                     icon = { Text("희") },
                     label = { Text("희진") },
                 )
                 NavigationBarItem(
-                    selected = currentDestination?.hasRoute<SeungyeonRoute>() == true,
-                    onClick = { navController.navigateToTab(SeungyeonRoute) },
+                    selected = currentDestination?.hasRoute<Seungyeon>() == true,
+                    onClick = { navController.navigateToTab(Seungyeon) },
                     icon = { Text("승") },
                     label = { Text("승연") },
                 )
@@ -63,14 +62,14 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = MainDestination,
+            startDestination = Main,
             modifier = Modifier.padding(innerPadding),
         ) {
-            composable<MainDestination> { MainScreen() }
-            composable<EunjiDestination> { EunjiRoute() }
-            composable<HyeminRoute> { HyeminScreen() }
-            composable<HeejinRoute> { HeejinScreen() }
-            composable<SeungyeonRoute> { SeungyeonScreen() }
+            mainNavGraph()
+            eunjiNavGraph()
+            hyeminNavGraph()
+            heejinNavGraph()
+            seungyeonNavGraph()
         }
     }
 }

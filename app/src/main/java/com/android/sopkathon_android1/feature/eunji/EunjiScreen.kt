@@ -10,12 +10,21 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.android.sopkathon_android1.core.designsystem.theme.SOPKATHONANDROID1Theme
 import com.android.sopkathon_android1.data.model.EunjiItem
+
+@Composable
+fun EunjiRoute(viewModel: EunjiViewModel = hiltViewModel()) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    EunjiScreen(uiState = uiState, onRetry = viewModel::loadItems)
+}
 
 @Composable
 fun EunjiScreen(
