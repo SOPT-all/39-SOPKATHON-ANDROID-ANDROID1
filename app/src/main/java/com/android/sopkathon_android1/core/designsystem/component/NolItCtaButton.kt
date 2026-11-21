@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -30,7 +29,6 @@ fun CtaButton(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(50.dp)
             .clip(shape)
             .background(if (enabled) NolItTheme.colors.secondary else NolItTheme.colors.surface)
             .then(
@@ -42,6 +40,7 @@ fun CtaButton(
         contentAlignment = Alignment.Center,
     ) {
         Text(
+            modifier = Modifier.padding(14.dp),
             text = text,
             style = if (enabled) NolItTheme.typography.body1Sb else NolItTheme.typography.body1Md,
             color = if (enabled) Color.White else NolItTheme.colors.textPrimary,
