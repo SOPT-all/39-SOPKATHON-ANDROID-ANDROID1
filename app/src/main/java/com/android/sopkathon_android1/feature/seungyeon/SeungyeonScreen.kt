@@ -29,8 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.android.sopkathon_android1.R
@@ -261,9 +263,9 @@ private fun BadgeSection(badge: Badge) {
             Row(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .padding(start = 15.dp),
+                    .padding(start = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(14.dp),
-                verticalAlignment = Alignment.Bottom,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
                     modifier = Modifier
@@ -278,20 +280,28 @@ private fun BadgeSection(badge: Badge) {
                         modifier = Modifier.size(60.dp),
                     )
                 }
+                // 피그마처럼 줄 높이 여백을 위·아래 모두 유지 (Compose 기본값은 첫 줄 위·마지막 줄 아래를 잘라냄)
+                val fullLineHeight = LineHeightStyle(
+                    alignment = LineHeightStyle.Alignment.Center,
+                    trim = LineHeightStyle.Trim.None,
+                )
                 Column {
                     Text(
                         text = "현재 나의 단계",
-                        style = NolItTheme.typography.caption1Md,
+                        style = NolItTheme.typography.caption1Md.copy(lineHeightStyle = fullLineHeight),
                         color = NolItTheme.colors.textSecondary,
                     )
                     Text(
                         text = badge.label,
-                        style = NolItTheme.typography.h3Md,
+                        style = NolItTheme.typography.h3Md.copy(lineHeightStyle = fullLineHeight),
                         color = NolItTheme.colors.textPrimary,
                     )
                     Text(
                         text = badge.description,
-                        style = NolItTheme.typography.caption3Rg,
+                        style = NolItTheme.typography.caption3Rg.copy(
+                            lineHeight = 17.sp,
+                            lineHeightStyle = fullLineHeight,
+                        ),
                         color = NolItTheme.colors.textSecondary,
                     )
                 }
@@ -317,5 +327,20 @@ private fun SeungyeonScreenPreview() {
             ),
             onRetry = {},
         )
+    }
+}
+
+@Preview(name = "달성 배지", showBackground = true, backgroundColor = 0xFFFFFFFF, widthDp = 360)
+@Composable
+private fun BadgeSectionPreview() {
+    NolItTheme {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+        ) {
+            Badge.entries.forEach { badge ->
+                BadgeSection(badge = badge)
+            }
+        }
     }
 }
