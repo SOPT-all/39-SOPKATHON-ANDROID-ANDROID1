@@ -3,7 +3,7 @@ package com.android.sopkathon_android1.feature.seungyeon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.android.sopkathon_android1.core.designsystem.theme.SOPKATHONANDROID1Theme
+import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 
 @Composable
 fun SeungyeonRoute() {
@@ -18,5 +18,5 @@ fun SeungyeonScreen() {
 @Preview(showBackground = true)
 @Composable
 private fun SeungyeonScreenPreview() {
-    SOPKATHONANDROID1Theme { SeungyeonScreen() }
+    NolItTheme { SeungyeonScreen() }
 }

@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.android.sopkathon_android1.core.designsystem.theme.SOPKATHONANDROID1Theme
+import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 import com.android.sopkathon_android1.data.model.EunjiItem
 
 @Composable
@@ -33,7 +33,9 @@ fun EunjiScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxSize().padding(24.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -48,10 +50,12 @@ fun EunjiScreen(
                     Text(text = item.title)
                 }
             }
+
             EunjiUiState.Empty -> {
                 Text(text = "표시할 항목이 없어요")
                 Button(onClick = onRetry) { Text(text = "새로고침") }
             }
+
             EunjiUiState.Error -> {
                 Text(text = "목록을 불러오지 못했어요")
                 Button(onClick = onRetry) { Text(text = "다시 시도") }
@@ -63,7 +67,7 @@ fun EunjiScreen(
 @Preview(showBackground = true)
 @Composable
 private fun EunjiScreenPreview() {
-    SOPKATHONANDROID1Theme {
+    NolItTheme {
         EunjiScreen(
             uiState = EunjiUiState.Success(
                 items = listOf(EunjiItem(id = "sample-1", title = "샘플 항목 1")),
