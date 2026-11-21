@@ -8,7 +8,7 @@ val LocalSOPKATHONANDROID1Colors = staticCompositionLocalOf { defaultSOPKATHONAN
 val LocalSOPKATHONANDROID1Typography = staticCompositionLocalOf<SOPKATHONANDROID1Typography>{error("No Typography Provided")}
 @Composable
 fun SOPKATHONANDROID1Theme(
-    color: SOPKATHONANDROID1Colors = defaultSOPKATHONANDROID1Colors,
+    color: SopkathonA1Colors = defaultSOPKATHONANDROID1Colors,
     typography: SOPKATHONANDROID1Typography = defaultSOPKATHONANDROID1Typography,
     content: @Composable () -> Unit
 ) {
@@ -21,7 +21,7 @@ fun SOPKATHONANDROID1Theme(
 }
 
 object SOPKATHONANDROID1Theme {
-    val colors: SOPKATHONANDROID1Colors
+    val colors: SopkathonA1Colors
         @Composable
         get() = LocalSOPKATHONANDROID1Colors.current
     val typography: SOPKATHONANDROID1Typography
