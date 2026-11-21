@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -42,8 +40,7 @@ fun HomeDailyPickCard(
 
     Box(
         modifier = modifier
-            .width(280.dp)
-            .heightIn(min = 258.dp)
+            .fillMaxWidth()
             .clip(RoundedCornerShape(30.dp))
             .background(NolItTheme.colors.surface)
             .noRippleClickable(role = Role.Button, onClick = onClick),
@@ -63,7 +60,7 @@ fun HomeDailyPickCard(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 17.dp),
+                .padding(start = 16.dp, end = 16.dp, top = 175.dp, bottom = 17.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp),
         ) {
             Text(
@@ -89,7 +86,7 @@ fun HomeDailyPickCard(
     }
 }
 
-@Preview(name = "HomeDailyPickCard", showBackground = true)
+@Preview(name = "HomeDailyPickCard", showBackground = true, widthDp = 280)
 @Composable
 private fun HomeDailyPickCardPreview() {
     NolItTheme {
