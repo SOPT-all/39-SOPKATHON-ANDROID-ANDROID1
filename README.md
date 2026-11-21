@@ -20,12 +20,10 @@
 
 ## 👥 팀원 및 역할
 
-| 이름 | 사진 | 담당 역할 |
-| --- | --- | --- |
-| 최은지 | <img src="docs/images/choi-eunji.png" alt="최은지" width="160" /> | A · 홈 |
-| 남궁혜민 | <img src="docs/images/namgung-hyemin.png" alt="남궁혜민" width="160" /> | B · 미션 수행·인증 |
-| 신승연 | <img src="docs/images/shin-seungyeon.png" alt="신승연" width="160" /> | D · 마이페이지 |
-| 정희진 | <img src="docs/images/jeong-heejin.png" alt="정희진" width="160" /> | C · 미션 제작 |
+| 최은지 | 남궁혜민 | 신승연 | 정희진 |
+| :---: | :---: | :---: | :---: |
+| <img src="docs/images/choi-eunji.png" alt="최은지" width="160" /> | <img src="docs/images/namgung-hyemin.png" alt="남궁혜민" width="160" /> | <img src="docs/images/shin-seungyeon.png" alt="신승연" width="160" /> | <img src="docs/images/jeong-heejin.png" alt="정희진" width="160" /> |
+| A · 홈 | B · 미션 수행·인증 | D · 마이페이지 | C · 미션 제작 |
 
 ## ✨ 주요 기능
 
