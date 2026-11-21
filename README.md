@@ -8,12 +8,12 @@
 
 ## 👥 팀원 및 역할
 
-| 이름 | 담당 역할 |
-| --- | --- |
-| 최은지 | 추후 작성 |
-| 남궁혜민 | 추후 작성 |
-| 신승연 | 추후 작성 |
-| 정희진 | 추후 작성 |
+| 이름 | 사진 | 담당 역할 |
+| --- | --- | --- |
+| 최은지 | <img src="docs/images/choi-eunji.png" alt="최은지" width="160" /> | 추후 작성 |
+| 남궁혜민 | <img src="docs/images/namgung-hyemin.png" alt="남궁혜민" width="160" /> | 추후 작성 |
+| 신승연 | <img src="docs/images/shin-seungyeon.png" alt="신승연" width="160" /> | 추후 작성 |
+| 정희진 | <img src="docs/images/jeong-heejin.png" alt="정희진" width="160" /> | 추후 작성 |
 
 ## ✨ 주요 기능
 
@@ -70,7 +70,3 @@
 ## 📸 Android 팀원 사진 (Before)
 
 ![Android 팀원 단체사진 (Before)](docs/images/android-team-before.jpg)
-
-| 최은지 | 남궁혜민 | 신승연 | 정희진 |
-| --- | --- | --- | --- |
-| <img src="docs/images/choi-eunji.png" alt="최은지" width="160" /> | <img src="docs/images/namgung-hyemin.png" alt="남궁혜민" width="160" /> | <img src="docs/images/shin-seungyeon.png" alt="신승연" width="160" /> | <img src="docs/images/jeong-heejin.png" alt="정희진" width="160" /> |
