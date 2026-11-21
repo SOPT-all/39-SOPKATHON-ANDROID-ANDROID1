@@ -28,7 +28,7 @@ class EunjiViewModel @Inject constructor(
     }
 
     fun getMissionDetail(missionId: Long) {
-        _uiState.update { it.copy(missionDetail = MissionDetailModel()) }
+        _uiState.update { it.copy(missionDetail = MissionDetailModel(), detailLoading = true) }
 
         viewModelScope.launch {
             try {
@@ -48,6 +48,8 @@ class EunjiViewModel @Inject constructor(
                 throw exception
             } catch (exception: Exception) {
                 // TODO: 실패 처리 (404 MISSION_NOT_FOUND 등)
+            } finally {
+                _uiState.update { it.copy(detailLoading = false) }
             }
         }
     }
@@ -117,6 +119,8 @@ class EunjiViewModel @Inject constructor(
                 throw exception
             } catch (exception: Exception) {
                 // TODO: 실패 처리 (현재는 빈 그리드 유지)
+            } finally {
+                _uiState.update { it.copy(loading = false) }
             }
         }
     }
