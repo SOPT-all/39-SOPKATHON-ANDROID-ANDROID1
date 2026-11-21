@@ -21,7 +21,6 @@ import com.android.sopkathon_android1.feature.hyemin.navigation.HyeminDetail
 import com.android.sopkathon_android1.feature.hyemin.navigation.hyeminDetailNavGraph
 import com.android.sopkathon_android1.feature.hyemin.navigation.navigateToHyeminDetail
 import com.android.sopkathon_android1.feature.hyemin.navigation.hyeminNavGraph
-import com.android.sopkathon_android1.feature.main.navigation.Main
 import com.android.sopkathon_android1.feature.main.navigation.mainNavGraph
 import com.android.sopkathon_android1.feature.seungyeon.navigation.Seungyeon
 import com.android.sopkathon_android1.feature.seungyeon.navigation.seungyeonNavGraph
@@ -58,7 +57,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Main,
+            startDestination = Eunji,
             modifier = Modifier.padding(innerPadding),
         ) {
             mainNavGraph()
