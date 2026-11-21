@@ -27,6 +27,7 @@
 - PR 제목: `[유형/#이슈번호] 작업 내용` (예: `[FEAT/#6] 홈화면 구현`)
 - 이슈 작성 시 [이슈 템플릿](../.github/ISSUE_TEMPLATE/issue.md), PR 작성 시 [PR 템플릿](../.github/pull_request_template.md)을 사용합니다.
 - PR의 `Related issue`에 실제 번호를 넣어 `closed #6`처럼 적습니다.
+- 이 저장소에서 생성한 PR이 열리거나 리뷰 준비 상태가 되면 [리뷰 요청 워크플로](../.github/workflows/request-android-team-review.yml)가 `SOPT-all/android39_one` 팀에 리뷰를 요청합니다.
 
 GitHub 기본 브랜치가 `main`인 동안 이슈 자동 종료 키워드는 `main` 대상 PR에서만 작동합니다. `develop` 대상 PR에서는 관련 이슈를 별도로 연결하거나 종료해야 합니다.
 
