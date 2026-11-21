@@ -5,7 +5,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
-import com.android.sopkathon_android1.feature.heejin.HeejinMissionDraft
 import com.android.sopkathon_android1.feature.heejin.HeejinRoute
 import kotlinx.serialization.Serializable
 
@@ -17,10 +16,13 @@ fun NavController.navigateToHeejin(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.heejinNavGraph(
-    onSubmit: (HeejinMissionDraft) -> Unit = {},
+    onMissionCreated: (Long) -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     composable<Heejin> {
-        HeejinRoute(onSubmit = onSubmit, contentPadding = contentPadding)
+        HeejinRoute(
+            onMissionCreated = onMissionCreated,
+            contentPadding = contentPadding,
+        )
     }
 }

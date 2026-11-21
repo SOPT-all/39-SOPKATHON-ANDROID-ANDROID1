@@ -43,17 +43,19 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         modifier = modifier,
         containerColor = NolItTheme.colors.background,
         bottomBar = {
-            NolItBottomNavigationBar(
-                selectedTab = selectedTab,
-                onTabSelected = { tab ->
-                    when (tab) {
-                        NolItBottomTab.HOME -> navController.navigateToTab(Eunji)
-                        NolItBottomTab.CHALLENGE -> navController.navigateToTab(Hyemin)
-                        NolItBottomTab.CREATE -> navController.navigateToTab(Heejin)
-                        NolItBottomTab.MY -> navController.navigateToTab(Seungyeon)
-                    }
-                },
-            )
+            if (currentDestination?.hasRoute<Heejin>() != true) {
+                NolItBottomNavigationBar(
+                    selectedTab = selectedTab,
+                    onTabSelected = { tab ->
+                        when (tab) {
+                            NolItBottomTab.HOME -> navController.navigateToTab(Eunji)
+                            NolItBottomTab.CHALLENGE -> navController.navigateToTab(Hyemin)
+                            NolItBottomTab.CREATE -> navController.navigateToTab(Heejin)
+                            NolItBottomTab.MY -> navController.navigateToTab(Seungyeon)
+                        }
+                    },
+                )
+            }
         },
     ) { innerPadding ->
         NavHost(
@@ -65,7 +67,10 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             eunjiNavGraph()
             hyeminNavGraph(onMissionClick = { navController.navigateToHyeminDetail(it) })
             hyeminDetailNavGraph(onBack = { navController.popBackStack() })
-            heejinNavGraph(contentPadding = innerPadding)
+            heejinNavGraph(
+                onMissionCreated = { navController.popBackStack() },
+                contentPadding = innerPadding,
+            )
             seungyeonNavGraph()
         }
     }

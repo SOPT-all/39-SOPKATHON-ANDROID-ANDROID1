@@ -1,5 +1,7 @@
 package com.android.sopkathon_android1.core.network
 
+import com.android.sopkathon_android1.data.service.HeejinService
+import com.android.sopkathon_android1.data.service.ImageService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,6 +27,16 @@ private const val BASE_URL = "https://sopkathon-android1.duckdns.org/"
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    @Provides
+    @Singleton
+    fun provideHeejinService(retrofit: Retrofit): HeejinService =
+        retrofit.create(HeejinService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideImageService(retrofit: Retrofit): ImageService =
+        retrofit.create(ImageService::class.java)
+
     @Provides
     @Singleton
     fun provideJson(): Json = Json { ignoreUnknownKeys = true }
