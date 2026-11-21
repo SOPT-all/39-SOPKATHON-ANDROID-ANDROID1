@@ -5,15 +5,15 @@
 
 ## 📌 MVP 주요 기능 범위
 
-| 우선순위 | 기능 |
-| --- | --- |
-| Must | 미션 제작 |
+| 우선순위 | 기능                         |
+| --- |----------------------------|
+| Must | 미션 제작                      |
 | Must | 홈 미션 둘러보기 (랜덤 추천 · 하입순 정렬) |
-| Must | 도전 인증 + AI 도장 |
-| Must | 하입 (미션 추천) |
-| Should | 모두의 도전 (인증 커뮤니티) |
-| Should | 좋아요 |
-| Could | 마이페이지 |
+| Must | 도전 인증                      |
+| Must | 하입 (미션 추천)                 |
+| Should | 모두의 도전 (인증 커뮤니티)           |
+| Should | 좋아요                        |
+| Could | 마이페이지                      |
 
 ## 👥 팀원 및 역할
 
@@ -31,8 +31,6 @@
 | UI | Jetpack Compose |
 | 의존성 주입 | Hilt |
 | 아키텍처 | MVVM, Google 권장 앱 아키텍처 |
-
-> 세부 라이브러리와 버전은 구현이 확정되면 업데이트합니다.
 
 ## 🌿 컨벤션 및 브랜치 전략
 ### 코딩컨벤션
@@ -76,3 +74,7 @@
 ## 📸 Android 팀원 사진 (Before)
 
 ![Android 팀원 단체사진 (Before)](docs/images/android-team-before.jpg)
+
+## 📸 Android 팀원 사진 (After)
+
+![img.png](img.png)
