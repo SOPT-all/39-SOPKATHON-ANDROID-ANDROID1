@@ -47,8 +47,8 @@ fun NolItTextField(
     var isFocused by remember { mutableStateOf(false) }
     val isActive = isFocused || state.text.isNotEmpty()
     val captionColor = when {
-        isError -> NolItTheme.colors.accentRed
-        isActive -> NolItTheme.colors.neutral0
+        isError -> NolItTheme.colors.red
+        isActive -> NolItTheme.colors.textPrimary
         else -> NolItTheme.colors.neutral500
     }
 
@@ -65,7 +65,7 @@ fun NolItTextField(
                     if (isError || isActive) {
                         Modifier.border(
                             width = 1.dp,
-                            color = if (isError) NolItTheme.colors.accentRed else NolItTheme.colors.secondary,
+                            color = if (isError) NolItTheme.colors.red else NolItTheme.colors.secondary,
                             shape = RoundedCornerShape(12.dp),
                         )
                     } else {
@@ -85,7 +85,7 @@ fun NolItTextField(
                     .onFocusChanged { isFocused = it.isFocused },
                 inputTransformation = InputTransformation.maxLength(maxLength),
                 lineLimits = lineLimits,
-                textStyle = NolItTheme.typography.body2Md.copy(color = NolItTheme.colors.neutral0),
+                textStyle = NolItTheme.typography.body2Md.copy(color = NolItTheme.colors.textPrimary),
                 cursorBrush = SolidColor(NolItTheme.colors.secondary),
                 decorator = { innerTextField ->
                     Box {
@@ -112,7 +112,7 @@ fun NolItTextField(
                 Text(
                     text = errorMessage,
                     style = NolItTheme.typography.caption3Rg,
-                    color = NolItTheme.colors.accentRed,
+                    color = NolItTheme.colors.red,
                 )
                 Spacer(modifier = Modifier.width(10.dp))
             }

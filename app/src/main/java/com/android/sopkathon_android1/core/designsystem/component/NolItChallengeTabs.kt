@@ -54,7 +54,6 @@ fun NolItChallengeTabs(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxHeight()
                     .clip(RoundedCornerShape(20.dp))
                     .then(
                         if (selected) Modifier.background(NolItTheme.colors.primary) else Modifier,
@@ -74,7 +73,7 @@ fun NolItChallengeTabs(
                     } else {
                         NolItTheme.typography.body2Md
                     },
-                    color = if (selected) NolItTheme.colors.neutral0 else NolItTheme.colors.background,
+                    color = if (selected) NolItTheme.colors.textPrimary else NolItTheme.colors.background,
                     textAlign = TextAlign.Center,
                 )
             }

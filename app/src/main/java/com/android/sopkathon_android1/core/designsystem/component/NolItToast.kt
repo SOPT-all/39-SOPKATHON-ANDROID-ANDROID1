@@ -44,7 +44,7 @@ fun NolItToast(
             .height(28.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(
-                if (isError) NolItTheme.colors.accentRed else NolItTheme.colors.textPrimary,
+                if (isError) NolItTheme.colors.red else NolItTheme.colors.textPrimary,
             ),
         contentAlignment = Alignment.Center,
     ) {
