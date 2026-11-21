@@ -19,7 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.selected
@@ -36,9 +36,10 @@ fun MissionCompleteHypeButton(
     modifier: Modifier = Modifier,
 ) {
     val shape = RoundedCornerShape(16.dp)
-    val backgroundColor = if (isSelected) Color(0xFF536075) else Color(0xFFFCFCFD)
+    val backgroundColor = if (isSelected) NolItTheme.colors.neutral600 else NolItTheme.colors.neutral25
     val borderColor = if (isSelected) backgroundColor else NolItTheme.colors.border
-    val textColor = if (isSelected) NolItTheme.colors.background else Color(0xFF99A3B3)
+    val textColor = if (isSelected) NolItTheme.colors.background else NolItTheme.colors.neutral400
+    val iconColor = if (isSelected) NolItTheme.colors.primary else NolItTheme.colors.neutral400
     val iconRes = if (isSelected) {
         R.drawable.ic_mission_complete_hype_selected
     } else {
@@ -64,6 +65,7 @@ fun MissionCompleteHypeButton(
             Image(
                 painter = painterResource(iconRes),
                 contentDescription = null,
+                colorFilter = ColorFilter.tint(iconColor),
                 modifier = Modifier.size(width = 20.dp, height = 34.dp),
             )
             Text(

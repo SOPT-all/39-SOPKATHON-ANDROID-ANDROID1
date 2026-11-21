@@ -77,7 +77,7 @@ fun HomeDailyPickCard(
             Text(
                 text = title,
                 style = NolItTheme.typography.h2Sb,
-                color = Color.White,
+                color = NolItTheme.colors.background,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
