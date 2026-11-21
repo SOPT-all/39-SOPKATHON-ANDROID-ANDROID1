@@ -14,4 +14,5 @@ interface HyeminRepository {
     suspend fun saveDraft(id: String, draft: HyeminMissionDraft)
     suspend fun getMissions(): List<HyeminMission>
     suspend fun completeMission(id: String, photo: String, review: String, liked: Boolean): MissionVerificationResult
+    fun markCompleted(missionId: Long)
 }

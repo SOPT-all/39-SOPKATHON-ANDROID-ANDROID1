@@ -32,7 +32,7 @@ fun HyeminRoute(
         uiState = state,
         onTabSelected = viewModel::selectTab,
         onCompletedChanged = viewModel::filterCompleted,
-        onMissionClick = { onMissionClick(it.missionId.toString()) },
+        onMissionClick = { onMissionClick(it.missionBasketId.toString()) },
         onRetry = viewModel::loadMissions,
         onReviewLikeClick = viewModel::toggleReviewLike,
     )

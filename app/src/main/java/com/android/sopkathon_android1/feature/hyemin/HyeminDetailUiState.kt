@@ -13,9 +13,10 @@ data class HyeminDetailUiState(
     val liked: Boolean = false,
     val submitting: Boolean = false,
     val verificationState: HyeminVerificationState = HyeminVerificationState.IDLE,
+    val completionSaved: Boolean = false,
     val finished: Boolean = false,
     val message: String? = null,
 ) {
     val canInteract: Boolean
-        get() = !submitting && !finished && verificationState != HyeminVerificationState.SUCCESS
+        get() = !submitting && !finished && !completionSaved
 }

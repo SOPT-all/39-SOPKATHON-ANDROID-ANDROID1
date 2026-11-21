@@ -51,6 +51,10 @@ class FakeHyeminRepository @Inject constructor(
         if (result == MissionVerificationResult.SUCCESS) drafts.remove(id)
         return result
     }
+
+    override fun markCompleted(missionId: Long) {
+        dataSource.markCompleted(missionId)
+    }
 }
 
 private fun MissionReviewDto.toModel() = HyeminReview(
