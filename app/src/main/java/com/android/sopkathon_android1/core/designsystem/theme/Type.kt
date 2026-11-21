@@ -40,40 +40,41 @@ val defaultNolItTypography: NolItTypography
         val baseStyle = TextStyle(
             fontFamily = pretendard,
             color = defaultNolItColors.textPrimary,
+            letterSpacing = (-0.02).em
         )
         return NolItTypography(
             h1Sb = baseStyle.copy(
-                fontWeight = FontWeight.SemiBold, fontSize = 22.sp, lineHeight = 1.5.em
+                fontWeight = FontWeight.SemiBold, fontSize = 22.sp
             ),
             h2Sb = baseStyle.copy(
-                fontWeight = FontWeight.SemiBold, fontSize = 20.sp, lineHeight = 1.5.em
+                fontWeight = FontWeight.SemiBold, fontSize = 20.sp
             ),
             h3Sb = baseStyle.copy(
-                fontWeight = FontWeight.SemiBold, fontSize = 18.sp, lineHeight = 1.5.em
+                fontWeight = FontWeight.SemiBold, fontSize = 18.sp
             ),
             body1Md = baseStyle.copy(
-                fontWeight = FontWeight.Medium, fontSize = 16.sp, lineHeight = 1.5.em
+                fontWeight = FontWeight.Medium, fontSize = 16.sp
             ),
             body1Sb = baseStyle.copy(
-                fontWeight = FontWeight.SemiBold, fontSize = 16.sp, lineHeight = 1.5.em
+                fontWeight = FontWeight.SemiBold, fontSize = 16.sp
             ),
             body2Sb = baseStyle.copy(
-                fontWeight = FontWeight.SemiBold, fontSize = 14.sp, lineHeight = 20.sp
+                fontWeight = FontWeight.SemiBold, fontSize = 14.sp
             ),
             body2Rg = baseStyle.copy(
-                fontWeight = FontWeight.Normal, fontSize = 14.sp, lineHeight = 20.sp
+                fontWeight = FontWeight.Normal, fontSize = 14.sp
             ),
             caption1Md = baseStyle.copy(
-                fontWeight = FontWeight.Medium, fontSize = 12.sp, lineHeight = 18.sp
+                fontWeight = FontWeight.Medium, fontSize = 12.sp
             ),
             caption1B = baseStyle.copy(
-                fontWeight = FontWeight.Bold, fontSize = 12.sp, lineHeight = 18.sp
+                fontWeight = FontWeight.Bold, fontSize = 12.sp
             ),
             caption2Rg = baseStyle.copy(
-                fontWeight = FontWeight.Normal, fontSize = 10.sp, lineHeight = 14.sp
+                fontWeight = FontWeight.Normal, fontSize = 10.sp
             ),
             caption3Rg = baseStyle.copy(
-                fontWeight = FontWeight.Normal, fontSize = 8.sp, lineHeight = 10.sp
+                fontWeight = FontWeight.Normal, fontSize = 8.sp
             ),
         )
     }
