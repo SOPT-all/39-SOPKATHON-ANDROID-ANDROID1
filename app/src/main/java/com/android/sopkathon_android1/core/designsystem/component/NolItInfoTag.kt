@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 
 @Composable
-fun InfoTag(
+fun NolItInfoTag(
     text: String,
     modifier: Modifier = Modifier,
 ) {
@@ -35,10 +35,10 @@ fun InfoTag(
     }
 }
 
-@Preview(name = "InfoTag", showBackground = true)
+@Preview(name = "NolItInfoTag", showBackground = true)
 @Composable
-private fun InfoTagPreview() {
+private fun NolItInfoTagPreview() {
     NolItTheme {
-        InfoTag(text = "지우 · 고등학생")
+        NolItInfoTag(text = "지우 · 고등학생")
     }
 }

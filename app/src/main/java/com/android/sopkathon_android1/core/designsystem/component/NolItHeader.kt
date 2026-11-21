@@ -24,7 +24,7 @@ import com.android.sopkathon_android1.core.designsystem.extension.noRippleClicka
 import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 
 @Composable
-fun Header(
+fun NolItHeader(
     onNotificationClick: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -70,10 +70,10 @@ fun Header(
     }
 }
 
-@Preview(name = "Header", showBackground = true, widthDp = 360)
+@Preview(name = "NolItHeader", showBackground = true, widthDp = 360)
 @Composable
-private fun HeaderPreview() {
+private fun NolItHeaderPreview() {
     NolItTheme {
-        Header(onNotificationClick = {}, onSettingsClick = {})
+        NolItHeader(onNotificationClick = {}, onSettingsClick = {})
     }
 }

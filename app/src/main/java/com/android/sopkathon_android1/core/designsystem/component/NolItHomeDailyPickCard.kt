@@ -24,7 +24,7 @@ import com.android.sopkathon_android1.core.designsystem.extension.noRippleClicka
 import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 
 @Composable
-fun HomeDailyPickCard(
+fun NolItHomeDailyPickCard(
     title: String,
     imageUrl: String?,
     authorName: String,
@@ -75,22 +75,22 @@ fun HomeDailyPickCard(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                InfoTag(
+                NolItInfoTag(
                     text = authorText,
                     modifier = Modifier.widthIn(min = 86.dp),
                 )
-                InfoTag(text = durationText, modifier = Modifier.widthIn(min = 50.dp))
-                InfoTag(text = categoryText, modifier = Modifier.widthIn(min = 50.dp))
+                NolItInfoTag(text = durationText, modifier = Modifier.widthIn(min = 50.dp))
+                NolItInfoTag(text = categoryText, modifier = Modifier.widthIn(min = 50.dp))
             }
         }
     }
 }
 
-@Preview(name = "HomeDailyPickCard", showBackground = true, widthDp = 280)
+@Preview(name = "NolItHomeDailyPickCard", showBackground = true, widthDp = 280)
 @Composable
-private fun HomeDailyPickCardPreview() {
+private fun NolItHomeDailyPickCardPreview() {
     NolItTheme {
-        HomeDailyPickCard(
+        NolItHomeDailyPickCard(
             title = "치즈 슬랑이 만져보기",
             imageUrl = null,
             authorName = "지우",

@@ -28,7 +28,7 @@ import com.android.sopkathon_android1.core.designsystem.extension.noRippleClicka
 import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 
 @Composable
-fun MissionCompleteHypeButton(
+fun NolItMissionCompleteHypeButton(
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -75,16 +75,16 @@ fun MissionCompleteHypeButton(
     }
 }
 
-@Preview(name = "MissionCompleteHypeButton", showBackground = true, widthDp = 294)
+@Preview(name = "NolItMissionCompleteHypeButton", showBackground = true, widthDp = 294)
 @Composable
-private fun MissionCompleteHypeButtonPreview() {
+private fun NolItMissionCompleteHypeButtonPreview() {
     NolItTheme {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            MissionCompleteHypeButton(isSelected = false, onClick = {})
-            MissionCompleteHypeButton(isSelected = true, onClick = {})
+            NolItMissionCompleteHypeButton(isSelected = false, onClick = {})
+            NolItMissionCompleteHypeButton(isSelected = true, onClick = {})
         }
     }
 }
