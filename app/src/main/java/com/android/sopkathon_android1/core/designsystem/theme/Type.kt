@@ -33,28 +33,7 @@ data class NolItTypography(
     val caption1B: TextStyle,
     val caption2Rg: TextStyle,
     val caption3Rg: TextStyle,
-) {
-    val groupedTypography: List<Pair<String, List<Pair<String, TextStyle>>>>
-        get() = listOf(
-            "Title" to listOf(
-                "h1-sb" to h1Sb,
-                "h2-sb" to h2Sb,
-                "h3-sb" to h3Sb,
-            ),
-            "Body" to listOf(
-                "body1-md" to body1Md,
-                "body1-sb" to body1Sb,
-                "body2-sb" to body2Sb,
-                "body2-rg" to body2Rg,
-            ),
-            "Caption" to listOf(
-                "caption1-md" to caption1Md,
-                "caption1-b" to caption1B,
-                "caption2-rg" to caption2Rg,
-                "caption3-rg" to caption3Rg,
-            ),
-        )
-}
+)
 
 val defaultNolItTypography: NolItTypography
     @Composable get() {
