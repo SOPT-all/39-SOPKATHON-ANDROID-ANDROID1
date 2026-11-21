@@ -5,17 +5,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavDestination.Companion.hasRoute
 import com.android.sopkathon_android1.core.designsystem.component.NolItBottomNavigationBar
 import com.android.sopkathon_android1.core.designsystem.component.NolItBottomTab
+import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 import com.android.sopkathon_android1.feature.eunji.navigation.Eunji
 import com.android.sopkathon_android1.feature.eunji.navigation.eunjiNavGraph
 import com.android.sopkathon_android1.feature.heejin.navigation.Heejin
 import com.android.sopkathon_android1.feature.heejin.navigation.heejinNavGraph
 import com.android.sopkathon_android1.feature.hyemin.navigation.Hyemin
+import com.android.sopkathon_android1.feature.hyemin.navigation.HyeminDetail
+import com.android.sopkathon_android1.feature.hyemin.navigation.hyeminDetailNavGraph
+import com.android.sopkathon_android1.feature.hyemin.navigation.navigateToHyeminDetail
 import com.android.sopkathon_android1.feature.hyemin.navigation.hyeminNavGraph
 import com.android.sopkathon_android1.feature.main.navigation.Main
 import com.android.sopkathon_android1.feature.main.navigation.mainNavGraph
@@ -29,7 +33,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     val currentDestination = backStackEntry?.destination
     val selectedTab = when {
         currentDestination?.hasRoute<Eunji>() == true -> NolItBottomTab.HOME
-        currentDestination?.hasRoute<Hyemin>() == true -> NolItBottomTab.CHALLENGE
+        currentDestination?.hasRoute<Hyemin>() == true || currentDestination?.hasRoute<HyeminDetail>() == true -> NolItBottomTab.CHALLENGE
         currentDestination?.hasRoute<Heejin>() == true -> NolItBottomTab.CREATE
         currentDestination?.hasRoute<Seungyeon>() == true -> NolItBottomTab.MY
         else -> null
@@ -37,6 +41,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
 
     Scaffold(
         modifier = modifier,
+        containerColor = NolItTheme.colors.background,
         bottomBar = {
             NolItBottomNavigationBar(
                 selectedTab = selectedTab,
@@ -58,8 +63,9 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         ) {
             mainNavGraph()
             eunjiNavGraph()
-            hyeminNavGraph()
-            heejinNavGraph()
+            hyeminNavGraph(onMissionClick = { navController.navigateToHyeminDetail(it) })
+            hyeminDetailNavGraph(onBack = { navController.popBackStack() })
+            heejinNavGraph(contentPadding = innerPadding)
             seungyeonNavGraph()
         }
     }

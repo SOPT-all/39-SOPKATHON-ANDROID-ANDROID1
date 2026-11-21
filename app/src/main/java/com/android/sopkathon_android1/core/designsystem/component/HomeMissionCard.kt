@@ -34,11 +34,13 @@ fun HomeMissionCard(
     imgUrl: String?,
     title: String,
     content: String,
+    onCardClick: () ->  Unit,
     onPlusClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
+            .noRippleClickable(onClick = onCardClick)
             .fillMaxWidth()
             .sh1(shape = RoundedCornerShape(8.dp))
             .clip(shape = RoundedCornerShape(8.dp))
@@ -112,6 +114,7 @@ private fun HomeMissionCardPreview(){
                 title = "1위 미션",
                 content = "셀프사진 네컷 찍어보기",
                 onPlusClick = {},
+                onCardClick = {},
                 modifier = Modifier.width(156.dp)
             )
         }

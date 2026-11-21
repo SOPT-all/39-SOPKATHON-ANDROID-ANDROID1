@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.sopkathon_android1.core.designsystem.extension.noRippleClickable
@@ -35,7 +35,7 @@ fun CtaButton(
                 if (enabled) Modifier
                 else Modifier.border(width = 1.dp, color = NolItTheme.colors.border, shape = shape)
             )
-            .noRippleClickable(enabled = enabled, onClick = onClick)
+            .noRippleClickable(enabled = enabled, role = Role.Button, onClick = onClick)
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.Center,
     ) {
@@ -43,7 +43,7 @@ fun CtaButton(
             modifier = Modifier.padding(14.dp),
             text = text,
             style = if (enabled) NolItTheme.typography.body1Sb else NolItTheme.typography.body1Md,
-            color = if (enabled) Color.White else NolItTheme.colors.textPrimary,
+            color = if (enabled) NolItTheme.colors.background else NolItTheme.colors.textPrimary,
         )
     }
 }
