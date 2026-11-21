@@ -22,10 +22,10 @@ import com.android.sopkathon_android1.data.model.MainItem
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object MainRoute
+data object MainDestination
 
 @Composable
-fun MainRouteScreen(viewModel: MainViewModel = hiltViewModel()) {
+fun MainRoute(viewModel: MainViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     MainScreen(uiState = uiState, onRetry = viewModel::loadItems)
 }
