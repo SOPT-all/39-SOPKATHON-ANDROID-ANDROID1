@@ -49,7 +49,7 @@
 
 ViewModel의 상태·이벤트를 연결하는 `<화면명>Route`와 UI를 표시하는 `<화면명>Screen`은 같은 `<화면명>Screen.kt` 파일에 둔다. 일반 화면 Preview 하나도 이 파일에 둔다. 단순 진입 화면이나 정적 화면은 별도 Route Composable 없이 Screen을 등록해도 된다. 내비게이션 대상인 경우에는 경로 식별자가 필요하다.
 
-현재 은지 화면에 Mock 조회용 ViewModel과 Repository를 연결한다. 혜민·희진·승연은 같은 내비게이션 기본 구성을 사용하고, 각 Route에서 Screen을 호출하는 연결 지점만 준비한다. 해당 기능 구현 시 Route에 ViewModel 상태·이벤트를 연결한다. Main은 화면 선택 안내만 표시하는 단순 진입 화면이며, 별도 Route Composable이나 ViewModel을 두지 않는다. Main의 경로 객체는 `Main`이고 `mainNavGraph()`에서 `MainScreen()`을 직접 호출한다.
+모든 데이터 기반 기능 화면은 은지 화면을 기준 예제로 삼아 같은 Mock → 서버 교체 구조를 적용한다. 현재 동작하는 Mock 조회 연결은 은지에 먼저 구현되어 있다. 혜민·희진·승연은 내비게이션과 Route·Screen 기본 구성이 준비되어 있으며, 각 기능 개발 시 아래 적용 절차에 따라 해당 기능의 ViewModel·Repository·Fake 데이터 소스를 연결한다. Main은 화면 선택 안내만 표시하는 단순 진입 화면이며, 별도 Route Composable이나 ViewModel을 두지 않는다. Main의 경로 객체는 `Main`이고 `mainNavGraph()`에서 `MainScreen()`을 직접 호출한다.
 
 | 구성 | 역할 | 은지 화면 예시 |
 | --- | --- | --- |
@@ -98,7 +98,28 @@ feature/eunji/
   EunjiUiState.kt
 ```
 
-혜민·희진·승연도 각각 `navigation/<화면명>Navigation.kt`에 경로·이동·그래프 등록을, `<화면명>Screen.kt`에 Route·Screen·일반 Preview 하나를 둔다. 아직 필요하지 않은 ViewModel이나 Mock Repository는 미리 추가하지 않는다. `AppNavHost`는 `mainNavGraph()`, `eunjiNavGraph()`, `hyeminNavGraph()`, `heejinNavGraph()`, `seungyeonNavGraph()`를 조합한다.
+혜민·희진·승연도 각각 `navigation/<화면명>Navigation.kt`에 경로·이동·그래프 등록을, `<화면명>Screen.kt`에 Route·Screen·일반 Preview 하나를 둔다. 데이터 연결은 각 화면의 확정된 요구사항에 맞게 은지와 같은 방식으로 구현한다. `AppNavHost`는 `mainNavGraph()`, `eunjiNavGraph()`, `hyeminNavGraph()`, `heejinNavGraph()`, `seungyeonNavGraph()`를 조합한다.
+
+### 다른 기능에도 은지와 같은 구조 적용
+
+은지 전용 기능으로 한정하지 않는다. 혜민·희진·승연 등 각 화면을 구현할 때 다음 순서로 연결한다. 아래 이름은 각 기능에 추가할 구성의 예시이며, 현재 모두 구현되어 있다는 뜻은 아니다.
+
+1. 해당 화면의 확정된 디자인·동작을 기준으로 화면용 모델과 `<기능명>Repository` 인터페이스를 정의한다. 은지의 임시 항목 필드나 목록 조회 함수를 요구사항 확인 없이 그대로 복사하지 않는다.
+2. 은지의 `FakeEunjiDataSource`와 `FakeEunjiRepository`를 참고해 해당 기능의 Fake 데이터 소스와 Repository 구현체를 만든다. 로딩·빈 결과·오류 등 해당 화면에 필요한 상태도 확인할 수 있게 한다.
+3. `RepositoryModule`과 `FakeDataSourceModule`에 해당 기능의 바인딩·제공 함수를 추가한다. 예를 들어 `HyeminRepository`에는 `FakeHyeminRepository`를 주입한다. 기존 은지 바인딩을 다른 기능의 바인딩으로 덮어쓰지 않는다.
+4. `EunjiViewModel`을 참고해 해당 기능의 ViewModel과 UI 상태를 만들고, ViewModel은 해당 기능의 Repository 인터페이스만 주입받는다.
+5. 기존 `<화면명>Screen.kt`의 Route에서 `hiltViewModel()`과 `collectAsStateWithLifecycle()`로 상태를 연결한다. Screen은 상태와 실제 UI에 필요한 이벤트 콜백만 받는다. `onRetry`도 재시도 UI가 있는 경우에 사용한다.
+6. 서버 구현이 준비되면 해당 기능의 Hilt 바인딩을 Fake에서 서버 Repository로 교체한다. 같은 조회 계약과 화면용 모델을 유지하면 Route·Screen·ViewModel을 다시 연결하지 않는다.
+
+```text
+각 기능의 NavGraph → Route → Screen
+                      ↕ 상태·이벤트
+                   ViewModel → Repository 인터페이스
+                                ├─ 개발 중: 해당 기능의 FakeRepository → FakeDataSource
+                                └─ 서버 준비 후: 서버 Repository → 원격 DataSource
+```
+
+각 기능은 자신의 Repository와 데이터 소스를 사용한다. 모든 화면이 `EunjiRepository`를 공유하는 방식으로 확장하지 않는다.
 
 ### Mock 데이터 사용
 
