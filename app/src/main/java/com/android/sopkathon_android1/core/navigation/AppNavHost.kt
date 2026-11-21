@@ -1,14 +1,15 @@
 package com.android.sopkathon_android1.core.navigation
 
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavDestination.Companion.hasRoute
 import com.android.sopkathon_android1.core.designsystem.component.NolItBottomNavigationBar
 import com.android.sopkathon_android1.core.designsystem.component.NolItBottomTab
 import com.android.sopkathon_android1.feature.eunji.navigation.Eunji
@@ -54,7 +55,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         NavHost(
             navController = navController,
             startDestination = Main,
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding),
         ) {
             mainNavGraph()
             eunjiNavGraph()
