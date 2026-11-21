@@ -35,14 +35,14 @@ class RemoteImageRepository @Inject constructor(
             }
             val body = response.body()
             val image = body?.data
-            if (body?.code != "IMAGE_UPLOAD_SUCCESS" || image == null || image.imageKey.isBlank() || image.imageUrl.isBlank()) {
+            if (image == null || image.imageKey.isBlank() || image.imageUrl.isBlank()) {
                 throw ImageUploadException(response.code(), body?.code)
             }
             UploadedImage(imageKey = image.imageKey, imageUrl = image.imageUrl)
         }
 
     private companion object {
-        val SUPPORTED_MIME_TYPES = setOf("image/jpeg", "image/png", "image/webp")
+        val SUPPORTED_MIME_TYPES = setOf("image/jpeg", "image/png")
     }
 }
 

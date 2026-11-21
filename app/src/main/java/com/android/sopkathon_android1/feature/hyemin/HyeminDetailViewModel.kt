@@ -16,6 +16,7 @@ import com.android.sopkathon_android1.data.repository.remote.ImageUploadExceptio
 import com.android.sopkathon_android1.data.repository.remote.MissionCompletionException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import java.util.logging.Logger
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -91,10 +92,12 @@ class HyeminDetailViewModel @Inject constructor(
         if (state.mission == null || state.mission.completed || text.isEmpty() || !state.canInteract) return
         _uiState.update { it.copy(submitting = true, message = null, verificationState = HyeminVerificationState.LOADING) }
         viewModelScope.launch {
+            var stage = "IMAGE_READ"
             try {
                 val imageKey = uploadedPhoto?.takeIf { it.first == photo }?.second ?: run {
                     val selectedImage = selectedImageSource.read(photo)
                     val uploadedImage = try {
+                        stage = "IMAGE_UPLOAD"
                         imageRepository.uploadImage(selectedImage.file, selectedImage.mimeType)
                     } finally {
                         selectedImage.file.delete()
@@ -102,11 +105,15 @@ class HyeminDetailViewModel @Inject constructor(
                     uploadedPhoto = photo to uploadedImage.imageKey
                     uploadedImage.imageKey
                 }
+                stage = "MISSION_COMPLETION"
+                Logger.getLogger("MissionSubmission").info("completion_request basketId=${state.mission.missionBasketId}")
                 val result = completionRepository.completeMission(
                     state.mission.missionBasketId,
                     imageKey,
                     text,
                 )
+                Logger.getLogger("MissionSubmission").info("completion_response result=$result")
+                stage = "LOCAL_COMPLETION_UPDATE"
                 repository.markCompleted(state.mission.missionId)
                 _uiState.update { it.copy(
                     submitting = false,
@@ -121,6 +128,20 @@ class HyeminDetailViewModel @Inject constructor(
                 _uiState.update { it.copy(submitting = false, verificationState = HyeminVerificationState.IDLE) }
                 throw e
             } catch (e: Exception) {
+                val httpStatus = when (e) {
+                    is ImageUploadException -> e.httpStatus
+                    is MissionCompletionException -> e.httpStatus
+                    else -> null
+                }
+                val errorCode = when (e) {
+                    is ImageUploadException -> e.code
+                    is ImageUploadValidationException -> e.code
+                    is MissionCompletionException -> e.code
+                    else -> null
+                }
+                Logger.getLogger("MissionSubmission").warning(
+                    "submission_failed stage=$stage httpStatus=$httpStatus code=$errorCode type=${e.javaClass.simpleName}",
+                )
                 if (e is MissionCompletionException && e.code == "MISSION_ALREADY_COMPLETED") {
                     repository.markCompleted(state.mission.missionId)
                     _uiState.update { it.copy(
@@ -139,7 +160,7 @@ class HyeminDetailViewModel @Inject constructor(
                 }
                 val message = when (imageCode) {
                     "IMAGE_EMPTY" -> "이미지 파일을 확인해주세요."
-                    "IMAGE_TYPE_NOT_SUPPORTED" -> "JPEG, PNG, WebP 이미지만 업로드할 수 있어요."
+                    "IMAGE_TYPE_NOT_SUPPORTED" -> "JPG, PNG 이미지만 업로드할 수 있어요."
                     "IMAGE_SIZE_EXCEEDED" -> "이미지는 최대 10MB까지 업로드할 수 있어요."
                     "IMAGE_UPLOAD_FAILED" -> "이미지 업로드에 실패했어요. 다시 시도해주세요."
                     "INVALID_INPUT" -> "입력값을 확인해주세요."

@@ -26,7 +26,7 @@ class ContentUriImageSource @Inject constructor(
         val suffix = when (mimeType) {
             "image/jpeg" -> ".jpg"
             "image/png" -> ".png"
-            else -> ".webp"
+            else -> throw ImageUploadValidationException("IMAGE_TYPE_NOT_SUPPORTED")
         }
         val file = File.createTempFile("mission-image-", suffix, context.cacheDir)
         try {
@@ -58,6 +58,6 @@ class ContentUriImageSource @Inject constructor(
     }
 
     private companion object {
-        val SUPPORTED_MIME_TYPES = setOf("image/jpeg", "image/png", "image/webp")
+        val SUPPORTED_MIME_TYPES = setOf("image/jpeg", "image/png")
     }
 }

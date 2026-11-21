@@ -1,5 +1,8 @@
 package com.android.sopkathon_android1.core.network
 
+import android.content.Context
+import android.content.pm.ApplicationInfo
+import android.util.Log
 import com.android.sopkathon_android1.data.api.ImageApi
 import com.android.sopkathon_android1.data.api.MissionApi
 import com.android.sopkathon_android1.data.api.ReviewApi
@@ -9,10 +12,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
@@ -58,7 +63,16 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder().build()
+    fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient =
+        OkHttpClient.Builder().apply {
+            if (context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
+                addInterceptor(HttpLoggingInterceptor { message ->
+                    Log.d("MissionHttp", message)
+                }.apply {
+                    level = HttpLoggingInterceptor.Level.BASIC
+                })
+            }
+        }.build()
 
     @Provides
     @Singleton

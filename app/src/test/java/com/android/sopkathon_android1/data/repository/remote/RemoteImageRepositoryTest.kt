@@ -27,7 +27,7 @@ class RemoteImageRepositoryTest {
 
     @Test
     fun `지원 이미지의 file 파트와 원본 바이트를 보내고 응답을 변환한다`() = runTest {
-        for (mimeType in listOf("image/jpeg", "image/png", "image/webp")) {
+        for (mimeType in listOf("image/jpeg", "image/png")) {
             val repository = repository { request ->
                 assertEquals("POST", request.method)
                 assertEquals("/v1/images", request.url.encodedPath)
@@ -75,7 +75,9 @@ class RemoteImageRepositoryTest {
     @Test
     fun `지원하지 않는 형식과 빈 파일은 요청하지 않는다`() = runTest {
         val repository = repository { error("네트워크 요청이 발생하면 안 됩니다.") }
-        assertEquals("IMAGE_TYPE_NOT_SUPPORTED", expectFailure<ImageUploadValidationException> { repository.uploadImage(imageFile(), "image/gif") }.code)
+        for (mimeType in listOf("image/gif", "image/webp", "image/heic")) {
+            assertEquals("IMAGE_TYPE_NOT_SUPPORTED", expectFailure<ImageUploadValidationException> { repository.uploadImage(imageFile(), mimeType) }.code)
+        }
         assertEquals("IMAGE_EMPTY", expectFailure<ImageUploadValidationException> {
             repository.uploadImage(temporaryFolder.newFile(), "image/png")
         }.code)
@@ -90,12 +92,12 @@ class RemoteImageRepositoryTest {
     }
 
     @Test
-    fun `200 응답이어도 성공 코드가 다르면 실패한다`() = runTest {
+    fun `Swagger에 성공 코드가 지정되지 않아도 200과 유효한 업로드 결과면 성공한다`() = runTest {
         val repository = repository { request ->
-            response(request, 200, """{"status":200,"code":"OTHER_CODE","message":"오류","data":{"imageKey":"missions/test.jpg","imageUrl":"https://example.com/test.jpg"}}""")
+            response(request, 200, """{"status":0,"code":"string","message":"ok","data":{"imageKey":"missions/test.jpg","imageUrl":"https://example.com/test.jpg"}}""")
         }
-        val error = expectFailure<ImageUploadException> { repository.uploadImage(imageFile(), "image/jpeg") }
-        assertEquals("OTHER_CODE", error.code)
+        val image = repository.uploadImage(imageFile(), "image/jpeg")
+        assertEquals("missions/test.jpg", image.imageKey)
     }
 
     @Test
