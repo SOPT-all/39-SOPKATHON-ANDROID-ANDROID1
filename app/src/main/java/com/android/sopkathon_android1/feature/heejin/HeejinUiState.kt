@@ -12,6 +12,8 @@ data class HeejinUiState(
     val instructions: TextFieldState = TextFieldState(),
     val selectedPhotoUri: String? = null,
     val isSubmitting: Boolean = false,
+    val createdMissionId: Long? = null,
+    val errorMessage: String? = null,
 ) {
     val isSubmitEnabled: Boolean
         get() = title.text.isNotBlank() &&
@@ -20,5 +22,7 @@ data class HeejinUiState(
             introduction.text.length <= MISSION_INTRODUCTION_MAX_LENGTH &&
             instructions.text.isNotBlank() &&
             instructions.text.length <= MISSION_INSTRUCTIONS_MAX_LENGTH &&
+            instructions.text.lines().size in 1..3 &&
+            instructions.text.lines().all { it.isNotBlank() } &&
             !selectedPhotoUri.isNullOrBlank()
 }

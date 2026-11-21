@@ -1,6 +1,5 @@
 package com.android.sopkathon_android1.core.network
 
-import com.android.sopkathon_android1.data.api.MissionApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,6 +10,9 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.android.sopkathon_android1.data.api.MissionApi
+import com.android.sopkathon_android1.data.service.HeejinService
+import com.android.sopkathon_android1.data.service.ImageService
 
 private const val BASE_URL = "https://sopkathon-android1.duckdns.org/"
 
@@ -26,6 +28,16 @@ private const val BASE_URL = "https://sopkathon-android1.duckdns.org/"
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    @Provides
+    @Singleton
+    fun provideHeejinService(retrofit: Retrofit): HeejinService =
+        retrofit.create(HeejinService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideImageService(retrofit: Retrofit): ImageService =
+        retrofit.create(ImageService::class.java)
+
     @Provides
     @Singleton
     fun provideJson(): Json = Json { ignoreUnknownKeys = true }

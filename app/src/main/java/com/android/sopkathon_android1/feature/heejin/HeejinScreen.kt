@@ -20,11 +20,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,25 +36,41 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.android.sopkathon_android1.core.designsystem.component.CtaButton
 import com.android.sopkathon_android1.core.designsystem.component.NolItPhotoUpload
 import com.android.sopkathon_android1.core.designsystem.component.NolItTextField
+import com.android.sopkathon_android1.core.designsystem.extension.showToast
 import com.android.sopkathon_android1.core.designsystem.extension.noRippleClickable
 import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 
 @Composable
 fun HeejinRoute(
-    onSubmit: (HeejinMissionDraft) -> Unit = {},
+    onMissionCreated: (Long) -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: HeejinViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let {
+            context.showToast(it)
+            viewModel.onErrorShown()
+        }
+    }
+    LaunchedEffect(uiState.createdMissionId) {
+        uiState.createdMissionId?.let {
+            viewModel.onMissionCreatedHandled()
+            onMissionCreated(it)
+        }
+    }
     val photoPicker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         viewModel.onPhotoSelected(uri?.toString())
     }
     HeejinScreen(
         uiState = uiState,
         onPhotoClick = {
-            photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            if (!uiState.isSubmitting) {
+                photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
         },
-        onSubmitClick = { viewModel.prepareSubmission()?.let(onSubmit) },
+        onSubmitClick = viewModel::submitMission,
         modifier = Modifier.consumeWindowInsets(contentPadding),
     )
 }

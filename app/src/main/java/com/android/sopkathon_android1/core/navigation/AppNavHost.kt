@@ -65,7 +65,10 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             eunjiNavGraph()
             hyeminNavGraph(onMissionClick = { navController.navigateToHyeminDetail(it) })
             hyeminDetailNavGraph(onBack = { navController.popBackStack() })
-            heejinNavGraph(contentPadding = innerPadding)
+            heejinNavGraph(
+                onMissionCreated = { navController.popBackStack() },
+                contentPadding = innerPadding,
+            )
             seungyeonNavGraph()
         }
     }
