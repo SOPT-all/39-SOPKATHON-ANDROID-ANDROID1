@@ -274,7 +274,7 @@ private fun BadgeSection(badge: Badge) {
                 ) {
                     Image(
                         painter = painterResource(badge.imageRes),
-                        contentDescription = "${badge.displayName} 배지",
+                        contentDescription = "${badge.label} 배지",
                         modifier = Modifier.size(60.dp),
                     )
                 }
@@ -285,7 +285,7 @@ private fun BadgeSection(badge: Badge) {
                         color = NolItTheme.colors.textSecondary,
                     )
                     Text(
-                        text = badge.displayName,
+                        text = badge.label,
                         style = NolItTheme.typography.h3Md,
                         color = NolItTheme.colors.textPrimary,
                     )
