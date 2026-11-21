@@ -92,7 +92,7 @@ Screen에서 ViewModel이나 NavController를 직접 얻지 않는다. 화면 �
 - `data/di/RepositoryModule.kt`에서 `EunjiRepository`에 `FakeEunjiRepository`를 바인딩한다. ViewModel은 Fake 구현체를 직접 참조하지 않는다.
 - 같은 파일의 `FakeDataSourceModule.provideEunjiDataSource()`에서 `FakeEunjiScenario.SUCCESS`, `EMPTY`, `ERROR` 중 하나를 설정하고 다시 실행해 목록·빈 목록·오류 화면을 확인한다.
 - 기본 지연은 500ms이며, 이 동안 로딩을 표시한다. `ERROR` 시나리오는 재시도해도 실패한다.
-- `EunjiScreen.kt`의 Compose Preview로 네 가지 상태의 UI를 확인할 수 있다.
+- `EunjiScreen.kt`에는 샘플 목록을 표시하는 `EunjiScreenPreview` 하나만 둔다. 별도의 상태별 Preview는 만들지 않고, 로딩·빈 목록·오류 화면은 Fake 시나리오로 앱에서 확인한다.
 
 ### 서버 데이터로 교체
 

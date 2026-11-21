@@ -51,31 +51,15 @@ fun EunjiScreen(
     }
 }
 
-@Preview(name = "로딩", showBackground = true)
+@Preview(showBackground = true)
 @Composable
-private fun EunjiLoadingPreview() {
-    SOPKATHONANDROID1Theme { EunjiScreen(EunjiUiState.Loading, onRetry = {}) }
-}
-
-@Preview(name = "성공", showBackground = true)
-@Composable
-private fun EunjiSuccessPreview() {
+private fun EunjiScreenPreview() {
     SOPKATHONANDROID1Theme {
         EunjiScreen(
-            EunjiUiState.Success(listOf(EunjiItem("sample-1", "샘플 항목 1"))),
+            uiState = EunjiUiState.Success(
+                items = listOf(EunjiItem(id = "sample-1", title = "샘플 항목 1")),
+            ),
             onRetry = {},
         )
     }
-}
-
-@Preview(name = "빈 목록", showBackground = true)
-@Composable
-private fun EunjiEmptyPreview() {
-    SOPKATHONANDROID1Theme { EunjiScreen(EunjiUiState.Empty, onRetry = {}) }
-}
-
-@Preview(name = "오류", showBackground = true)
-@Composable
-private fun EunjiErrorPreview() {
-    SOPKATHONANDROID1Theme { EunjiScreen(EunjiUiState.Error, onRetry = {}) }
 }
