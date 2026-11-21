@@ -1,13 +1,10 @@
 package com.android.sopkathon_android1.core.designsystem.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,17 +24,9 @@ import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 fun NolItHomeDailyPickCard(
     title: String,
     imageUrl: String?,
-    authorName: String,
-    studentType: String,
-    durationText: String,
-    categoryText: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val authorText = listOf(authorName, studentType)
-        .filter { it.isNotBlank() }
-        .joinToString(" · ")
-
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -60,8 +49,7 @@ fun NolItHomeDailyPickCard(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 175.dp, bottom = 17.dp),
-            verticalArrangement = Arrangement.spacedBy(5.dp),
+                .padding(start = 16.dp, end = 16.dp, top = 175.dp, bottom = 49.dp),
         ) {
             Text(
                 text = title,
@@ -70,18 +58,7 @@ fun NolItHomeDailyPickCard(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                NolItInfoTag(
-                    text = authorText,
-                    modifier = Modifier.widthIn(min = 86.dp),
-                )
-                NolItInfoTag(text = durationText, modifier = Modifier.widthIn(min = 50.dp))
-                NolItInfoTag(text = categoryText, modifier = Modifier.widthIn(min = 50.dp))
-            }
+
         }
     }
 }
@@ -93,10 +70,6 @@ private fun NolItHomeDailyPickCardPreview() {
         NolItHomeDailyPickCard(
             title = "치즈 슬랑이 만져보기",
             imageUrl = null,
-            authorName = "지우",
-            studentType = "고등학생",
-            durationText = "15m",
-            categoryText = "HYPE",
             onClick = {},
         )
     }
