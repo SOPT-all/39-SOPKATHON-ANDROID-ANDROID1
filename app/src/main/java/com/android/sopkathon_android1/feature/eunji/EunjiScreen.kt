@@ -1,32 +1,81 @@
 package com.android.sopkathon_android1.feature.eunji
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import kotlinx.serialization.Serializable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.android.sopkathon_android1.core.designsystem.theme.SOPKATHONANDROID1Theme
+import com.android.sopkathon_android1.data.model.EunjiItem
 
-@Serializable
-data object EunjiRoute
-
-/**
- * API 데이터를 화면에 연결할 때의 Hilt ViewModel 사용 예시:
- * ```kotlin
- * class EunjiRepository @Inject constructor(
- *     private val api: ResourceApi,
- * ) {
- *     suspend fun load(id: Long) = api.getResource(id)
- * }
- *
- * @HiltViewModel
- * class EunjiViewModel @Inject constructor(
- *     private val repository: EunjiRepository,
- * ) : ViewModel()
- *
- * @Composable
- * fun EunjiScreen(viewModel: EunjiViewModel = hiltViewModel()) { Text("은지") }
- * ```
- * `hiltViewModel()`을 사용하려면 `androidx.hilt:hilt-navigation-compose` 의존성을 추가한다.
- */
 @Composable
-fun EunjiScreen() {
-    Text(text = "은지")
+fun EunjiScreen(
+    uiState: EunjiUiState,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxSize().padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(text = "은지")
+        Text(text = "임시 목록 예제")
+        when (uiState) {
+            EunjiUiState.Loading -> CircularProgressIndicator()
+            is EunjiUiState.Success -> LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                items(items = uiState.items, key = { it.id }) { item ->
+                    Text(text = item.title)
+                }
+            }
+            EunjiUiState.Empty -> {
+                Text(text = "표시할 항목이 없어요")
+                Button(onClick = onRetry) { Text(text = "새로고침") }
+            }
+            EunjiUiState.Error -> {
+                Text(text = "목록을 불러오지 못했어요")
+                Button(onClick = onRetry) { Text(text = "다시 시도") }
+            }
+        }
+    }
+}
+
+@Preview(name = "로딩", showBackground = true)
+@Composable
+private fun EunjiLoadingPreview() {
+    SOPKATHONANDROID1Theme { EunjiScreen(EunjiUiState.Loading, onRetry = {}) }
+}
+
+@Preview(name = "성공", showBackground = true)
+@Composable
+private fun EunjiSuccessPreview() {
+    SOPKATHONANDROID1Theme {
+        EunjiScreen(
+            EunjiUiState.Success(listOf(EunjiItem("sample-1", "샘플 항목 1"))),
+            onRetry = {},
+        )
+    }
+}
+
+@Preview(name = "빈 목록", showBackground = true)
+@Composable
+private fun EunjiEmptyPreview() {
+    SOPKATHONANDROID1Theme { EunjiScreen(EunjiUiState.Empty, onRetry = {}) }
+}
+
+@Preview(name = "오류", showBackground = true)
+@Composable
+private fun EunjiErrorPreview() {
+    SOPKATHONANDROID1Theme { EunjiScreen(EunjiUiState.Error, onRetry = {}) }
 }

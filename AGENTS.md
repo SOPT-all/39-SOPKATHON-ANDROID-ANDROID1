@@ -45,54 +45,60 @@
 
 ## 화면 연결과 데이터 흐름
 
-새 기능 화면은 경로 객체 `<화면명>Destination`, 연결 Composable `<화면명>Route`, UI Composable `<화면명>Screen`으로 역할을 구분한다. 현재 메인 화면이 이 구조의 예제이며, 다른 기본 화면의 경로 객체는 아직 기존 `*Route` 이름을 사용한다.
+ViewModel의 상태·이벤트 연결이 필요한 기능 화면은 경로 객체 `<화면명>Destination`, 연결 Composable `<화면명>Route`, UI Composable `<화면명>Screen`으로 역할을 구분한다. 모든 화면에 세 구성을 강제하지 않는다. 단순 진입 화면이나 정적 화면은 별도 Route Composable 없이 Screen을 등록해도 된다. 내비게이션 대상인 경우에는 경로 식별자가 필요하다.
 
-| 구성 | 역할 | 메인 화면 예시 |
+현재 은지 화면에 Mock 조회용 ViewModel과 Repository를 연결한다. Main은 화면 선택 안내만 표시하는 단순 진입 화면이며, 별도 Route Composable이나 ViewModel을 두지 않는다. 혜민·희진·승연 기본 화면의 경로 객체는 아직 기존 `*Route` 이름을 사용한다.
+
+| 구성 | 역할 | 은지 화면 예시 |
 | --- | --- | --- |
-| Destination | 직렬화 가능한 내비게이션 경로 식별자 | `MainDestination` |
+| Destination | 직렬화 가능한 내비게이션 경로 식별자 | `EunjiDestination` |
 | NavHost | 경로 등록, Route 호출, 화면 이동 콜백 연결 | `AppNavHost` |
-| Route | Hilt로 ViewModel을 얻고 상태를 구독해 Screen에 상태와 이벤트 전달 | `MainRoute` |
-| Screen | 전달받은 상태로 UI를 표시하고 사용자 이벤트 전달 | `MainScreen` |
-| ViewModel | Repository를 호출하고 UI 상태 및 조회 작업 관리 | `MainViewModel` |
-| Repository | UI 계층이 사용할 데이터 조회 계약과 구현 | `MainRepository`, `FakeMainRepository` |
-| DataSource | Mock 또는 원격 데이터 조회 | `FakeMainDataSource` |
+| Route | Hilt로 ViewModel을 얻고 상태를 구독해 Screen에 상태와 이벤트 전달 | `EunjiRoute` |
+| Screen | 전달받은 상태로 UI를 표시하고 사용자 이벤트 전달 | `EunjiScreen` |
+| ViewModel | Repository를 호출하고 UI 상태 및 조회 작업 관리 | `EunjiViewModel` |
+| Repository | UI 계층이 사용할 데이터 조회 계약과 구현 | `EunjiRepository`, `FakeEunjiRepository` |
+| DataSource | Mock 또는 원격 데이터 조회 | `FakeEunjiDataSource` |
 
 현재 앱의 진입·조회·화면 갱신 흐름은 다음과 같다.
 
 ```text
 MainActivity
   → AppNavHost
-    → composable<MainDestination> { MainRoute() }
-      → MainRoute: Hilt ViewModel 획득, collectAsStateWithLifecycle() 구독
-        → MainScreen(uiState, onRetry): UI 표시
+    → 시작: composable<MainDestination> { MainScreen() } (화면 선택 안내)
+    → 은지 탭 선택: navigateToTab(EunjiDestination)
+      → composable<EunjiDestination> { EunjiRoute() }
+        → EunjiRoute: Hilt ViewModel 획득, collectAsStateWithLifecycle() 구독
+          → EunjiScreen(uiState, onRetry): UI 표시
 
-MainViewModel: 진입 시 loadItems()
-  → MainRepository.getItems()
-    → Hilt가 주입한 FakeMainRepository
-      → FakeMainDataSource: 임시 목록 반환
-  → MainUiState 갱신: Loading → Success / Empty / Error
-    → StateFlow 구독을 통해 MainScreen 갱신
+EunjiViewModel: 진입 시 loadItems()
+  → EunjiRepository.getItems()
+    → Hilt가 주입한 FakeEunjiRepository
+      → FakeEunjiDataSource: 임시 목록 반환
+  → EunjiUiState 갱신: Loading → Success / Empty / Error
+    → StateFlow 구독을 통해 EunjiScreen 갱신
 
-MainScreen에서 다시 시도
-  → MainRoute가 전달한 onRetry
-    → MainViewModel.loadItems()
+EunjiScreen에서 다시 시도
+  → EunjiRoute가 전달한 onRetry
+    → EunjiViewModel.loadItems()
 ```
 
 Screen에서 ViewModel이나 NavController를 직접 얻지 않는다. 화면 이동이 필요하면 NavHost에서 Route로 이동 콜백을 전달하고, Route가 Screen 이벤트와 연결한다. 현재 탭 선택과 백스택 처리는 `AppNavHost`와 `navigateToTab()`이 담당한다. 별도 `MainAppState`는 아직 도입하지 않았다.
 
 ### Mock 데이터 사용
 
-- `data/model/MainItem.kt`는 서버 DTO와 분리된 임시 화면용 모델이다. 실제 기능 요구사항이 정해지면 해당 모델과 조회 계약을 조정한다.
-- `data/di/RepositoryModule.kt`에서 `MainRepository`에 `FakeMainRepository`를 바인딩한다. ViewModel은 Fake 구현체를 직접 참조하지 않는다.
-- 같은 파일의 `FakeDataSourceModule.provideMainDataSource()`에서 `FakeMainScenario.SUCCESS`, `EMPTY`, `ERROR` 중 하나를 설정하고 다시 실행해 목록·빈 목록·오류 화면을 확인한다.
+앱 실행 후 하단의 은지 탭을 선택한다. Main에서는 Mock 데이터를 조회하지 않는다.
+
+- `data/model/EunjiItem.kt`는 서버 DTO와 분리된 임시 화면용 모델이다. 실제 기능 요구사항이 정해지면 해당 모델과 조회 계약을 조정한다.
+- `data/di/RepositoryModule.kt`에서 `EunjiRepository`에 `FakeEunjiRepository`를 바인딩한다. ViewModel은 Fake 구현체를 직접 참조하지 않는다.
+- 같은 파일의 `FakeDataSourceModule.provideEunjiDataSource()`에서 `FakeEunjiScenario.SUCCESS`, `EMPTY`, `ERROR` 중 하나를 설정하고 다시 실행해 목록·빈 목록·오류 화면을 확인한다.
 - 기본 지연은 500ms이며, 이 동안 로딩을 표시한다. `ERROR` 시나리오는 재시도해도 실패한다.
-- `MainScreen.kt`의 Compose Preview로 네 가지 상태의 UI를 확인할 수 있다.
+- `EunjiScreen.kt`의 Compose Preview로 네 가지 상태의 UI를 확인할 수 있다.
 
 ### 서버 데이터로 교체
 
 1. API 명세 확정 후 요청·응답 DTO와 Retrofit API, 원격 데이터 소스를 구현한다.
-2. `MainRepository`의 서버 구현체(예: `RemoteMainRepository`)를 추가한다. DTO를 화면용 모델로 변환하고, 빈 목록·실패·코루틴 취소에 대한 계약을 유지한다. 실패는 예외로 전달하고 코루틴 취소를 삼키지 않는다.
-3. 원격 API와 데이터 소스를 Hilt에 등록한 후 `RepositoryModule.bindMainRepository()`의 구현체를 `FakeMainRepository`에서 서버 구현체로 교체한다. 사용하지 않는 Fake 데이터 소스 제공 모듈을 제거한다.
+2. `EunjiRepository`의 서버 구현체(예: `RemoteEunjiRepository`)를 추가한다. DTO를 화면용 모델로 변환하고, 빈 목록·실패·코루틴 취소에 대한 계약을 유지한다. 실패는 예외로 전달하고 코루틴 취소를 삼키지 않는다.
+3. 원격 API와 데이터 소스를 Hilt에 등록한 후 `RepositoryModule.bindEunjiRepository()`의 구현체를 `FakeEunjiRepository`에서 서버 구현체로 교체한다. 사용하지 않는 Fake 데이터 소스 제공 모듈을 제거한다.
 4. Repository의 함수와 반환 모델이 유지되면 Route·Screen·ViewModel은 그대로 사용한다. API 명세에 따라 계약이나 화면 요구사항이 바뀌면 해당 부분도 조정한다.
 
 현재 Fake 구현은 모든 빌드에서 사용하므로 실제 배포 전에 서버 구현체로 교체한다. 서버 실패를 Mock 성공 데이터로 자동 대체하지 않는다.

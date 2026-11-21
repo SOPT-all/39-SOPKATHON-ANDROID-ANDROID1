@@ -1,9 +1,9 @@
 package com.android.sopkathon_android1.data.di
 
-import com.android.sopkathon_android1.data.datasource.fake.FakeMainDataSource
-import com.android.sopkathon_android1.data.datasource.fake.FakeMainScenario
-import com.android.sopkathon_android1.data.repository.MainRepository
-import com.android.sopkathon_android1.data.repository.fake.FakeMainRepository
+import com.android.sopkathon_android1.data.datasource.fake.FakeEunjiDataSource
+import com.android.sopkathon_android1.data.datasource.fake.FakeEunjiScenario
+import com.android.sopkathon_android1.data.repository.EunjiRepository
+import com.android.sopkathon_android1.data.repository.fake.FakeEunjiRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -17,7 +17,7 @@ abstract class RepositoryModule {
     // 서버 연동 시 이 바인딩의 구현체를 실제 Repository로 교체한다.
     @Binds
     @Singleton
-    abstract fun bindMainRepository(repository: FakeMainRepository): MainRepository
+    abstract fun bindEunjiRepository(repository: FakeEunjiRepository): EunjiRepository
 }
 
 @Module
@@ -25,7 +25,7 @@ abstract class RepositoryModule {
 object FakeDataSourceModule {
     @Provides
     @Singleton
-    fun provideMainDataSource(): FakeMainDataSource = FakeMainDataSource(
-        scenario = FakeMainScenario.SUCCESS,
+    fun provideEunjiDataSource(): FakeEunjiDataSource = FakeEunjiDataSource(
+        scenario = FakeEunjiScenario.SUCCESS,
     )
 }

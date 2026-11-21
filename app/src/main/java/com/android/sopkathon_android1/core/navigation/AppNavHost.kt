@@ -13,14 +13,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.android.sopkathon_android1.feature.eunji.EunjiDestination
 import com.android.sopkathon_android1.feature.eunji.EunjiRoute
-import com.android.sopkathon_android1.feature.eunji.EunjiScreen
 import com.android.sopkathon_android1.feature.heejin.HeejinRoute
 import com.android.sopkathon_android1.feature.heejin.HeejinScreen
 import com.android.sopkathon_android1.feature.hyemin.HyeminRoute
 import com.android.sopkathon_android1.feature.hyemin.HyeminScreen
 import com.android.sopkathon_android1.feature.main.MainDestination
-import com.android.sopkathon_android1.feature.main.MainRoute
+import com.android.sopkathon_android1.feature.main.MainScreen
 import com.android.sopkathon_android1.feature.seungyeon.SeungyeonRoute
 import com.android.sopkathon_android1.feature.seungyeon.SeungyeonScreen
 
@@ -35,8 +35,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
-                    selected = currentDestination?.hasRoute<EunjiRoute>() == true,
-                    onClick = { navController.navigateToTab(EunjiRoute) },
+                    selected = currentDestination?.hasRoute<EunjiDestination>() == true,
+                    onClick = { navController.navigateToTab(EunjiDestination) },
                     icon = { Text("은") },
                     label = { Text("은지") },
                 )
@@ -66,8 +66,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             startDestination = MainDestination,
             modifier = Modifier.padding(innerPadding),
         ) {
-            composable<MainDestination> { MainRoute() }
-            composable<EunjiRoute> { EunjiScreen() }
+            composable<MainDestination> { MainScreen() }
+            composable<EunjiDestination> { EunjiRoute() }
             composable<HyeminRoute> { HyeminScreen() }
             composable<HeejinRoute> { HeejinScreen() }
             composable<SeungyeonRoute> { SeungyeonScreen() }
