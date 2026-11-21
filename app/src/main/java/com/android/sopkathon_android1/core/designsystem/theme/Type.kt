@@ -18,7 +18,7 @@ private val pretendard = FontFamily(
 )
 
 @Immutable
-data class SOPKATHONANDROID1Typography(
+data class NolItTypography(
     // Title
     val h1Sb: TextStyle,
     val h2Sb: TextStyle,
@@ -56,13 +56,13 @@ data class SOPKATHONANDROID1Typography(
         )
 }
 
-val defaultSOPKATHONANDROID1Typography: SOPKATHONANDROID1Typography
+val defaultNolItTypography: NolItTypography
     @Composable get() {
         val baseStyle = TextStyle(
             fontFamily = pretendard,
-            color = defaultSOPKATHONANDROID1Colors.textPrimary,
+            color = defaultNolItColors.textPrimary,
         )
-        return SOPKATHONANDROID1Typography(
+        return NolItTypography(
             h1Sb = baseStyle.copy(
                 fontWeight = FontWeight.SemiBold, fontSize = 22.sp, lineHeight = 1.5.em
             ),

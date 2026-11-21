@@ -16,7 +16,7 @@ private val textSecondary = Color(0xFF737373)
 private val border = Color(0xFFDDDDDD)
 
 @Immutable
-data class SopkathonA1Colors(
+data class NolItColors(
     val primary: Color,
     val primarySoft: Color,
     val secondary: Color,
@@ -27,7 +27,7 @@ data class SopkathonA1Colors(
     val border: Color,
 )
 
-val defaultSOPKATHONANDROID1Colors = SopkathonA1Colors(
+val defaultNolItColors = NolItColors(
     primary = primary,
     primarySoft = primarySoft,
     secondary = secondary,

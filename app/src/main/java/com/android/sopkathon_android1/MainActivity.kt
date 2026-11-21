@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
-import com.android.sopkathon_android1.core.designsystem.theme.SOPKATHONANDROID1Theme
+import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 import com.android.sopkathon_android1.core.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            SOPKATHONANDROID1Theme {
+            NolItTheme {
                 AppNavHost(modifier = Modifier.fillMaxSize())
             }
         }

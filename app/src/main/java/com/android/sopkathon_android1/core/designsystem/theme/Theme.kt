@@ -4,28 +4,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 
-val LocalSOPKATHONANDROID1Colors = staticCompositionLocalOf { defaultSOPKATHONANDROID1Colors }
-val LocalSOPKATHONANDROID1Typography = staticCompositionLocalOf<SOPKATHONANDROID1Typography>{error("No Typography Provided")}
+val LocalNolItColors = staticCompositionLocalOf { defaultNolItColors }
+val LocalNolItTypography =
+    staticCompositionLocalOf<NolItTypography> { error("No Typography Provided") }
+
 @Composable
-fun SOPKATHONANDROID1Theme(
-    color: SopkathonA1Colors = defaultSOPKATHONANDROID1Colors,
-    typography: SOPKATHONANDROID1Typography = defaultSOPKATHONANDROID1Typography,
+fun NolItTheme(
+    color: NolItColors = defaultNolItColors,
+    typography: NolItTypography = defaultNolItTypography,
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalSOPKATHONANDROID1Colors provides color,
-        LocalSOPKATHONANDROID1Typography provides typography
+        LocalNolItColors provides color, LocalNolItTypography provides typography
     ) {
         content()
     }
 }
 
-object SOPKATHONANDROID1Theme {
-    val colors: SopkathonA1Colors
-        @Composable
-        get() = LocalSOPKATHONANDROID1Colors.current
-    val typography: SOPKATHONANDROID1Typography
-        @Composable
-        get() = LocalSOPKATHONANDROID1Typography.current
+object NolItTheme {
+    val colors: NolItColors
+        @Composable get() = LocalNolItColors.current
+    val typography: NolItTypography
+        @Composable get() = LocalNolItTypography.current
 }
 
