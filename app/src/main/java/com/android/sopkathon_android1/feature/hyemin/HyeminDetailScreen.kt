@@ -65,7 +65,14 @@ fun HyeminDetailScreen(
     onComplete: () -> Unit,
     onRetry: () -> Unit,
 ) {
-    Box(Modifier.fillMaxSize().background(NolItTheme.colors.background)) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(NolItTheme.colors.background)
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .imePadding(),
+    ) {
         when {
             uiState.loading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
             uiState.mission == null -> Column(Modifier.align(Alignment.Center)) {
@@ -109,7 +116,7 @@ private fun HyeminDetailContent(
     onComplete: () -> Unit,
 ) {
     val mission = state.mission ?: return
-    Column(Modifier.fillMaxSize().imePadding()) {
+    Column(Modifier.fillMaxSize()) {
         NolItHeader(
             type = NolItHeaderType.VERIFICATION,
             onCloseClick = onClose,

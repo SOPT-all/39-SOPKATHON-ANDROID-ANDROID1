@@ -1,6 +1,10 @@
 package com.android.sopkathon_android1.core.network
 
+import com.android.sopkathon_android1.data.api.ImageApi
 import com.android.sopkathon_android1.data.api.MissionApi
+import com.android.sopkathon_android1.data.api.ReviewApi
+import com.android.sopkathon_android1.data.service.HeejinService
+import com.android.sopkathon_android1.data.service.ImageService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +32,28 @@ private const val BASE_URL = "https://sopkathon-android1.duckdns.org/"
 object NetworkModule {
     @Provides
     @Singleton
+    fun provideHeejinService(retrofit: Retrofit): HeejinService =
+        retrofit.create(HeejinService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideImageService(retrofit: Retrofit): ImageService =
+        retrofit.create(ImageService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideImageApi(retrofit: Retrofit): ImageApi = retrofit.create(ImageApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideMissionApi(retrofit: Retrofit): MissionApi = retrofit.create(MissionApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideReviewApi(retrofit: Retrofit): ReviewApi = retrofit.create(ReviewApi::class.java)
+
+    @Provides
+    @Singleton
     fun provideJson(): Json = Json { ignoreUnknownKeys = true }
 
     @Provides
@@ -45,8 +71,4 @@ object NetworkModule {
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
 
-    @Provides
-    @Singleton
-    fun provideMissionApi(retrofit: Retrofit): MissionApi =
-        retrofit.create(MissionApi::class.java)
 }

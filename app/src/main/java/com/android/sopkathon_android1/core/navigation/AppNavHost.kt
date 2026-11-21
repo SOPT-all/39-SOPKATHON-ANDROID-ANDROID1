@@ -1,7 +1,9 @@
 package com.android.sopkathon_android1.core.navigation
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -21,7 +23,6 @@ import com.android.sopkathon_android1.feature.hyemin.navigation.HyeminDetail
 import com.android.sopkathon_android1.feature.hyemin.navigation.hyeminDetailNavGraph
 import com.android.sopkathon_android1.feature.hyemin.navigation.navigateToHyeminDetail
 import com.android.sopkathon_android1.feature.hyemin.navigation.hyeminNavGraph
-import com.android.sopkathon_android1.feature.main.navigation.Main
 import com.android.sopkathon_android1.feature.main.navigation.mainNavGraph
 import com.android.sopkathon_android1.feature.seungyeon.navigation.Seungyeon
 import com.android.sopkathon_android1.feature.seungyeon.navigation.seungyeonNavGraph
@@ -31,6 +32,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
+    val isHyeminDetail = currentDestination?.hasRoute<HyeminDetail>() == true
     val selectedTab = when {
         currentDestination?.hasRoute<Eunji>() == true -> NolItBottomTab.HOME
         currentDestination?.hasRoute<Hyemin>() == true || currentDestination?.hasRoute<HyeminDetail>() == true -> NolItBottomTab.CHALLENGE
@@ -42,30 +44,40 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     Scaffold(
         modifier = modifier,
         containerColor = NolItTheme.colors.background,
+        contentWindowInsets = if (isHyeminDetail) {
+            WindowInsets(0, 0, 0, 0)
+        } else {
+            ScaffoldDefaults.contentWindowInsets
+        },
         bottomBar = {
-            NolItBottomNavigationBar(
-                selectedTab = selectedTab,
-                onTabSelected = { tab ->
-                    when (tab) {
-                        NolItBottomTab.HOME -> navController.navigateToTab(Eunji)
-                        NolItBottomTab.CHALLENGE -> navController.navigateToTab(Hyemin)
-                        NolItBottomTab.CREATE -> navController.navigateToTab(Heejin)
-                        NolItBottomTab.MY -> navController.navigateToTab(Seungyeon)
-                    }
-                },
-            )
+            if (!isHyeminDetail) {
+                NolItBottomNavigationBar(
+                    selectedTab = selectedTab,
+                    onTabSelected = { tab ->
+                        when (tab) {
+                            NolItBottomTab.HOME -> navController.navigateToTab(Eunji)
+                            NolItBottomTab.CHALLENGE -> navController.navigateToTab(Hyemin)
+                            NolItBottomTab.CREATE -> navController.navigateToTab(Heejin)
+                            NolItBottomTab.MY -> navController.navigateToTab(Seungyeon)
+                        }
+                    },
+                )
+            }
         },
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Main,
+            startDestination = Eunji,
             modifier = Modifier.padding(innerPadding),
         ) {
             mainNavGraph()
             eunjiNavGraph()
             hyeminNavGraph(onMissionClick = { navController.navigateToHyeminDetail(it) })
             hyeminDetailNavGraph(onBack = { navController.popBackStack() })
-            heejinNavGraph(contentPadding = innerPadding)
+            heejinNavGraph(
+                onMissionCreated = { navController.popBackStack() },
+                contentPadding = innerPadding,
+            )
             seungyeonNavGraph()
         }
     }
