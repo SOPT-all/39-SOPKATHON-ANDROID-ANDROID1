@@ -7,4 +7,5 @@ data class HyeminMission(
     val dateLabel: String = "TODAY",
     val completed: Boolean = false,
     val instructions: String,
+    val imageUrl: String? = null,
 )

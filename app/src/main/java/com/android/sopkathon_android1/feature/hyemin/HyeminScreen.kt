@@ -2,20 +2,16 @@ package com.android.sopkathon_android1.feature.hyemin
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -79,9 +75,13 @@ fun HyeminScreen(
                 "도전",
                 style = NolItTheme.typography.h1Sb.copy(fontSize = 28.sp, lineHeight = 38.sp)
             )
+
             Spacer(Modifier.height(8.dp))
+
             NolItChallengeTabs(state.tab, onTabSelected, ourLabel = "모두의 도전")
+
             Spacer(Modifier.height(if (state.tab == ChallengeTab.OUR) 31.dp else 12.dp))
+
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -138,69 +138,18 @@ fun HyeminScreen(
                         style = NolItTheme.typography.body2Md
                     )
                     missions.forEach { mission ->
-                        ChallengeMissionCard(mission, onClick = { onMissionClick(mission) })
+                        ChallengeMissionCard(
+                            label = mission.dateLabel,
+                            review = mission.testimonial,
+                            title = mission.title,
+                            imageUrl = mission.imageUrl,
+                            onClick = { if (!mission.completed) onMissionClick(mission) },
+                        )
                         Spacer(Modifier.height(12.dp))
                     }
                 }
             }
             Spacer(Modifier.height(20.dp))
-        }
-    }
-}
-
-@Composable
-private fun ChallengeMissionCard(mission: HyeminMission, onClick: () -> Unit) {
-    BoxWithConstraints(
-        Modifier
-            .fillMaxWidth()
-            .aspectRatio(320f / 230f)
-            .clip(RoundedCornerShape(30.dp))
-            .clickable(enabled = !mission.completed, onClickLabel = "미션 인증하기", onClick = onClick),
-    ) {
-        val width = maxWidth
-        val image = when (mission.id) {
-            "movie" -> R.drawable.img_mission_movie
-            "roll" -> R.drawable.img_mission_roll
-            else -> R.drawable.img_mission_fruit
-        }
-        Image(
-            painterResource(image), null,
-            Modifier
-                .wrapContentSize(Alignment.TopStart, unbounded = true)
-                .requiredSize(
-                    width = if (mission.id == "movie") width * (327.956f / 320f) else width,
-                    height = width * when (mission.id) {
-                        "movie" -> 471f / 320f; "roll" -> 318f / 320f; else -> 1f
-                    }
-                )
-                .offset(y = width * if (mission.id == "movie") -184f / 320f else -1f / 320f),
-            contentScale = ContentScale.FillBounds,
-            alignment = Alignment.TopStart,
-        )
-        Box(Modifier
-            .matchParentSize()
-            .background(Color.Black.copy(alpha = .4f)))
-        Text(
-            mission.dateLabel,
-            Modifier.padding(start = 23.dp, top = 21.dp),
-            color = NolItTheme.colors.primary,
-            style = NolItTheme.typography.body2Sb
-        )
-        Column(
-            Modifier
-                .align(Alignment.BottomStart)
-                .padding(start = 18.dp, end = 18.dp, bottom = 17.dp)
-        ) {
-            Text(
-                mission.testimonial,
-                color = Color.White,
-                style = NolItTheme.typography.caption2Rg.copy(fontSize = 12.sp)
-            )
-            Text(
-                mission.title,
-                color = NolItTheme.colors.neutral25,
-                style = NolItTheme.typography.h2Sb.copy(fontSize = 24.sp, lineHeight = 33.sp)
-            )
         }
     }
 }
