@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -40,7 +41,7 @@ fun NolItToast(
 
     Box(
         modifier = modifier
-            .width(if (type == NolItToastType.MISSING_FIELDS) 166.dp else 156.dp)
+            .fillMaxWidth()
             .height(28.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(
@@ -48,27 +49,7 @@ fun NolItToast(
             ),
         contentAlignment = Alignment.Center,
     ) {
-        if (type == NolItToastType.MISSING_FIELDS) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 5.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Image(
-                    painter = painterResource(type.iconRes),
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                )
-                Spacer(modifier = Modifier.width(7.dp))
-                Text(
-                    text = type.message,
-                    style = NolItTheme.typography.caption1Md,
-                    color = NolItTheme.colors.background,
-                    maxLines = 1,
-                )
-            }
-        } else {
+        if (type == NolItToastType.LOADING) {
             Image(
                 painter = painterResource(type.iconRes),
                 contentDescription = null,
@@ -83,6 +64,26 @@ fun NolItToast(
                 color = NolItTheme.colors.background,
                 maxLines = 1,
             )
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 5.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painter = painterResource(type.iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                )
+                Spacer(modifier = Modifier.width(if (type == NolItToastType.MISSING_FIELDS) 7.dp else 10.dp))
+                Text(
+                    text = type.message,
+                    style = NolItTheme.typography.caption1Md,
+                    color = NolItTheme.colors.background,
+                    maxLines = 1,
+                )
+            }
         }
     }
 }
