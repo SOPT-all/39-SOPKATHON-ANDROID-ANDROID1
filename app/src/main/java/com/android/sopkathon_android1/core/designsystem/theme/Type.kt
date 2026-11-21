@@ -43,37 +43,70 @@ val defaultNolItTypography: NolItTypography
         )
         return NolItTypography(
             h1Sb = baseStyle.copy(
-                fontWeight = FontWeight.SemiBold, fontSize = 22.sp, lineHeight = 1.5.em, letterSpacing = (-0.02).em
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 22.sp,
+                lineHeight = 1.5.em,
+                letterSpacing = (-0.02).em
             ),
             h2Sb = baseStyle.copy(
-                fontWeight = FontWeight.SemiBold, fontSize = 20.sp, lineHeight = 1.5.em, letterSpacing = (-0.02).em
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp,
+                lineHeight = 1.5.em,
+                letterSpacing = (-0.02).em
             ),
             h3Md = baseStyle.copy(
-                fontWeight = FontWeight.Medium, fontSize = 18.sp, lineHeight = 28.sp, letterSpacing = (-0.02).em
+                fontWeight = FontWeight.Medium,
+                fontSize = 18.sp,
+                lineHeight = 28.sp,
+                letterSpacing = (-0.02).em
             ),
             body1Md = baseStyle.copy(
-                fontWeight = FontWeight.Medium, fontSize = 16.sp, lineHeight = 1.5.em, letterSpacing = (-0.02).em
+                fontWeight = FontWeight.Medium,
+                fontSize = 16.sp,
+                lineHeight = 1.5.em,
+                letterSpacing = (-0.02).em
             ),
             body1Sb = baseStyle.copy(
-                fontWeight = FontWeight.SemiBold, fontSize = 16.sp, lineHeight = 1.5.em, letterSpacing = (-0.02).em
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                lineHeight = 1.5.em,
+                letterSpacing = (-0.02).em
             ),
             body2Sb = baseStyle.copy(
-                fontWeight = FontWeight.SemiBold, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = (-0.02).em
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
+                lineHeight = 20.sp,
+                letterSpacing = (-0.02).em
             ),
             body2Md = baseStyle.copy(
-                fontWeight = FontWeight.Medium, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = (-0.02).em
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp,
+                lineHeight = 20.sp,
+                letterSpacing = (-0.02).em
             ),
             caption1Md = baseStyle.copy(
-                fontWeight = FontWeight.Medium, fontSize = 12.sp, lineHeight = 17.sp, letterSpacing = (-0.02).em
+                fontWeight = FontWeight.Medium,
+                fontSize = 12.sp,
+                lineHeight = 17.sp,
+                letterSpacing = (-0.02).em
             ),
             caption1B = baseStyle.copy(
-                fontWeight = FontWeight.Bold, fontSize = 12.sp, lineHeight = 17.sp, letterSpacing = (-0.02).em
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp,
+                lineHeight = 17.sp,
+                letterSpacing = (-0.02).em
             ),
             caption2Rg = baseStyle.copy(
-                fontWeight = FontWeight.Normal, fontSize = 10.sp, lineHeight = 17.sp, letterSpacing = (-0.02).em
+                fontWeight = FontWeight.Normal,
+                fontSize = 10.sp,
+                lineHeight = 17.sp,
+                letterSpacing = (-0.02).em
             ),
             caption3Rg = baseStyle.copy(
-                fontWeight = FontWeight.Normal, fontSize = 8.sp, lineHeight = 10.sp, letterSpacing = (-0.02).em
+                fontWeight = FontWeight.Normal,
+                fontSize = 8.sp,
+                lineHeight = 10.sp,
+                letterSpacing = (-0.02).em
             ),
         )
     }
