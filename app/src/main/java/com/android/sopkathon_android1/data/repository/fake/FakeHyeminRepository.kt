@@ -2,10 +2,12 @@ package com.android.sopkathon_android1.data.repository.fake
 
 import com.android.sopkathon_android1.data.model.HyeminMissionDraft
 import com.android.sopkathon_android1.data.model.HyeminMission
+import com.android.sopkathon_android1.data.model.HyeminMissionDetail
 import com.android.sopkathon_android1.data.datasource.fake.FakeHyeminDataSource
 import com.android.sopkathon_android1.data.datasource.fake.FakeHyeminReviewDataSource
 import com.android.sopkathon_android1.data.dto.hyemin.MissionReviewDto
 import com.android.sopkathon_android1.data.model.HyeminReview
+import com.android.sopkathon_android1.data.model.MissionVerificationResult
 import com.android.sopkathon_android1.data.repository.HyeminRepository
 import javax.inject.Inject
 
@@ -13,6 +15,9 @@ class FakeHyeminRepository @Inject constructor(
     private val dataSource: FakeHyeminDataSource,
     private val reviewDataSource: FakeHyeminReviewDataSource,
 ) : HyeminRepository {
+    override suspend fun getMissionDetail(missionId: Long): HyeminMissionDetail =
+        dataSource.getMissionDetail(missionId)
+
     override suspend fun getReviews(): List<HyeminReview> {
         val response = reviewDataSource.getReviews()
         check(response.code == "MOCK_SUCCESS") { "인증글 조회 실패: ${response.code}" }
@@ -41,9 +46,10 @@ class FakeHyeminRepository @Inject constructor(
             )
         }
     }
-    override suspend fun completeMission(id: String, photo: String, review: String, liked: Boolean) {
-        dataSource.completeMission(id, photo, review)
-        drafts.remove(id)
+    override suspend fun completeMission(id: String, photo: String, review: String, liked: Boolean): MissionVerificationResult {
+        val result = dataSource.completeMission(id, photo, review)
+        if (result == MissionVerificationResult.SUCCESS) drafts.remove(id)
+        return result
     }
 }
 

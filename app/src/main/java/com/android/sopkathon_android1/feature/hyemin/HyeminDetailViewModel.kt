@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.sopkathon_android1.data.model.HyeminMissionDraft
+import com.android.sopkathon_android1.data.model.MissionVerificationResult
 import com.android.sopkathon_android1.data.repository.HyeminRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -34,9 +35,10 @@ class HyeminDetailViewModel @Inject constructor(
             _uiState.update { it.copy(loading = true, message = null) }
             try {
                 val mission = repository.getMissions().firstOrNull { it.missionId.toString() == missionId }
+                val detail = mission?.let { repository.getMissionDetail(it.missionId) }
                 val draft = repository.getDraft(missionId) ?: HyeminMissionDraft()
                 review.edit { replace(0, length, draft.review) }
-                _uiState.update { it.copy(mission = mission, loading = false, photo = draft.photo, liked = draft.liked) }
+                _uiState.update { it.copy(mission = mission, description = detail?.description.orEmpty(), instructions = detail?.instructions.orEmpty(), loading = false, photo = draft.photo, liked = draft.liked) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -45,12 +47,12 @@ class HyeminDetailViewModel @Inject constructor(
         }
     }
 
-    fun setPhoto(uri: String) { _uiState.update { it.copy(photo = uri) } }
-    fun toggleLike() { _uiState.update { it.copy(liked = !it.liked) } }
+    fun setPhoto(uri: String) { if (_uiState.value.canInteract) _uiState.update { it.copy(photo = uri) } }
+    fun toggleLike() { if (_uiState.value.canInteract) _uiState.update { it.copy(liked = !it.liked) } }
 
     fun saveDraft() {
         val state = _uiState.value
-        if (state.submitting || state.mission == null) return
+        if (!state.canInteract || state.mission == null) return
         _uiState.update { it.copy(submitting = true) }
         viewModelScope.launch {
             try {
@@ -66,18 +68,35 @@ class HyeminDetailViewModel @Inject constructor(
 
     fun completeMission() {
         val state = _uiState.value
-        val photo = state.photo ?: return
+        val photo = state.photo?.takeIf { it.isNotBlank() } ?: return
         val text = review.text.toString().trim()
-        if (state.mission == null || state.mission.completed || text.isEmpty() || state.submitting) return
-        _uiState.update { it.copy(submitting = true, message = null) }
+        if (state.mission == null || state.mission.completed || text.isEmpty() || !state.canInteract) return
+        _uiState.update { it.copy(submitting = true, message = null, verificationState = HyeminVerificationState.LOADING) }
         viewModelScope.launch {
             try {
-                repository.completeMission(missionId, photo, text, state.liked)
-                _uiState.update { it.copy(submitting = false, finished = true) }
+                val result = repository.completeMission(missionId, photo, text, state.liked)
+                _uiState.update { it.copy(
+                    submitting = false,
+                    verificationState = when (result) {
+                        MissionVerificationResult.SUCCESS -> HyeminVerificationState.SUCCESS
+                        MissionVerificationResult.FAILURE -> HyeminVerificationState.FAILURE
+                    },
+                ) }
             } catch (e: CancellationException) {
+                _uiState.update { it.copy(submitting = false, verificationState = HyeminVerificationState.IDLE) }
                 throw e
             } catch (e: Exception) {
-                _uiState.update { it.copy(submitting = false, message = "인증에 실패했어요. 다시 시도해주세요") }
+                _uiState.update { it.copy(submitting = false, verificationState = HyeminVerificationState.FAILURE) }
+            }
+        }
+    }
+
+    fun dismissVerificationToast() {
+        _uiState.update { state ->
+            when (state.verificationState) {
+                HyeminVerificationState.SUCCESS -> state.copy(verificationState = HyeminVerificationState.IDLE, finished = true)
+                HyeminVerificationState.FAILURE -> state.copy(verificationState = HyeminVerificationState.IDLE)
+                else -> state
             }
         }
     }
