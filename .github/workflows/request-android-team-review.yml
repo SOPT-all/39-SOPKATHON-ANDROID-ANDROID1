@@ -1,0 +1,26 @@
+name: Request Android team review
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  request-review:
+    if: ${{ !github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request android39_one team
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [ "$(gh api "repos/$GH_REPO/pulls/$PR_NUMBER/requested_reviewers" --jq '.teams | any(.slug == "android39_one")')" = "true" ]; then
+            exit 0
+          fi
+
+          gh api -X POST "repos/$GH_REPO/pulls/$PR_NUMBER/requested_reviewers" \
+            -f 'team_reviewers[]=android39_one'
