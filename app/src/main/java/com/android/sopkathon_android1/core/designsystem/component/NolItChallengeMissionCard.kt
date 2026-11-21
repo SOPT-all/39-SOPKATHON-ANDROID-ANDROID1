@@ -1,8 +1,10 @@
 package com.android.sopkathon_android1.core.designsystem.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -53,13 +55,17 @@ fun ChallengeMissionCard(
             .clip(RoundedCornerShape(30.dp))
     ) {
         Box(
-            modifier = Modifier.noRippleClickable(onClick = onClick)
+            modifier = Modifier
+                .fillMaxSize()
+                .noRippleClickable(onClick = onClick)
         ) {
             BaseAsyncImage(
                 imgUrl = imageUrl,
                 errorRes = R.drawable.img_challengemissioncard_error,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxSize(),
             )
+
+            Box(Modifier.fillMaxSize().background(Color(0x66000000)))
 
             Text(
                 text = label.toMissionDateLabel(),
