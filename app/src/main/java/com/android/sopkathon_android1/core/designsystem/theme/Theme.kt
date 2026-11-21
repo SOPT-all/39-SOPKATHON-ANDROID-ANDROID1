@@ -1,4 +1,4 @@
-package com.android.sopkathon_android1.ui.theme
+package com.android.sopkathon_android1.core.designsystem.theme
 
 import android.app.Activity
 import android.os.Build
