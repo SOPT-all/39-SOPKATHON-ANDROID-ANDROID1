@@ -30,8 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.android.sopkathon_android1.core.designsystem.component.CtaButton
-import com.android.sopkathon_android1.core.designsystem.component.NolItHeader
-import com.android.sopkathon_android1.core.designsystem.component.NolItHeaderType
 import com.android.sopkathon_android1.core.designsystem.component.NolItPhotoUpload
 import com.android.sopkathon_android1.core.designsystem.component.NolItTextField
 import com.android.sopkathon_android1.core.designsystem.extension.noRippleClickable
@@ -39,7 +37,6 @@ import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 
 @Composable
 fun HeejinRoute(
-    onClose: () -> Unit = {},
     onSubmit: (HeejinMissionDraft) -> Unit = {},
     viewModel: HeejinViewModel = hiltViewModel(),
 ) {
@@ -52,7 +49,6 @@ fun HeejinRoute(
         onPhotoClick = {
             photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         },
-        onCloseClick = onClose,
         onSubmitClick = { viewModel.prepareSubmission()?.let(onSubmit) },
     )
 }
@@ -61,7 +57,6 @@ fun HeejinRoute(
 fun HeejinScreen(
     uiState: HeejinUiState,
     onPhotoClick: () -> Unit,
-    onCloseClick: () -> Unit,
     onSubmitClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -80,7 +75,6 @@ fun HeejinScreen(
                     .verticalScroll(scrollState),
             ),
     ) {
-        NolItHeader(type = NolItHeaderType.VERIFICATION, onCloseClick = onCloseClick)
         Column(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(44.dp),
@@ -141,7 +135,7 @@ fun HeejinScreen(
                 )
             }
             CtaButton(
-                text = "선택한 미션 수행하기",
+                text = "미션 제작 완료하기",
                 onClick = onSubmitClick,
                 enabled = !uiState.isSubmitting,
                 modifier = Modifier.padding(top = 20.dp),
@@ -155,6 +149,6 @@ fun HeejinScreen(
 private fun HeejinScreenPreview() {
     val uiState = remember { HeejinUiState() }
     NolItTheme {
-        HeejinScreen(uiState = uiState, onPhotoClick = {}, onCloseClick = {}, onSubmitClick = {})
+        HeejinScreen(uiState = uiState, onPhotoClick = {}, onSubmitClick = {})
     }
 }

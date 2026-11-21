@@ -16,10 +16,9 @@ fun NavController.navigateToHeejin(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.heejinNavGraph(
-    onClose: () -> Unit = {},
     onSubmit: (HeejinMissionDraft) -> Unit = {},
 ) {
     composable<Heejin> {
-        HeejinRoute(onClose = onClose, onSubmit = onSubmit)
+        HeejinRoute(onSubmit = onSubmit)
     }
 }
