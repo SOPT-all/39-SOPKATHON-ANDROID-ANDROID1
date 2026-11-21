@@ -43,19 +43,17 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         modifier = modifier,
         containerColor = NolItTheme.colors.background,
         bottomBar = {
-            if (currentDestination?.hasRoute<Heejin>() != true) {
-                NolItBottomNavigationBar(
-                    selectedTab = selectedTab,
-                    onTabSelected = { tab ->
-                        when (tab) {
-                            NolItBottomTab.HOME -> navController.navigateToTab(Eunji)
-                            NolItBottomTab.CHALLENGE -> navController.navigateToTab(Hyemin)
-                            NolItBottomTab.CREATE -> navController.navigateToTab(Heejin)
-                            NolItBottomTab.MY -> navController.navigateToTab(Seungyeon)
-                        }
-                    },
-                )
-            }
+            NolItBottomNavigationBar(
+                selectedTab = selectedTab,
+                onTabSelected = { tab ->
+                    when (tab) {
+                        NolItBottomTab.HOME -> navController.navigateToTab(Eunji)
+                        NolItBottomTab.CHALLENGE -> navController.navigateToTab(Hyemin)
+                        NolItBottomTab.CREATE -> navController.navigateToTab(Heejin)
+                        NolItBottomTab.MY -> navController.navigateToTab(Seungyeon)
+                    }
+                },
+            )
         },
     ) { innerPadding ->
         NavHost(
