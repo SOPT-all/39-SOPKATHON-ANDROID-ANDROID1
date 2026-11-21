@@ -1,18 +1,24 @@
 package com.android.sopkathon_android1.feature.eunji
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.android.sopkathon_android1.R
+import com.android.sopkathon_android1.data.repository.EunjiRepository
 import com.android.sopkathon_android1.feature.eunji.model.HomeHypeMissionUiModel
 import com.android.sopkathon_android1.feature.eunji.model.HomeRecommendUiModel
 import com.android.sopkathon_android1.feature.eunji.model.MissionDetailModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 @HiltViewModel
-class EunjiViewModel @Inject constructor() : ViewModel() {
+class EunjiViewModel @Inject constructor(
+    private val repository: EunjiRepository,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(EunjiUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -22,22 +28,40 @@ class EunjiViewModel @Inject constructor() : ViewModel() {
     }
 
     fun getMissionDetail(missionId: Long) {
-        // TODO: 서버 연결 시 missionId로 실제 상세 조회
-        _uiState.update {
-            it.copy(
-                missionDetail = MissionDetailModel(
-                    imageUrl = "https://example.com/images/mission1.jpg",
-                    writerName = "지우",
-                    title = "셀프 사진 네 컷 찍어보기",
-                    description = "친구와 함께, 또는 혼자서도 좋아요. 좋아하는 포즈로 오늘의 나를 남겨보세요.",
-                    instructions = "1. 가까운 셀프 사진 부스를 찾아요.\n2. 원하는 배경과 포즈로 네 컷을 찍어요.\n3. 찍은 사진과 한 줄 후기를 인증해요.",
-                ),
-            )
+        _uiState.update { it.copy(missionDetail = MissionDetailModel()) }
+
+        viewModelScope.launch {
+            try {
+                val detail = repository.getMissionDetail(missionId)
+                _uiState.update {
+                    it.copy(
+                        missionDetail = MissionDetailModel(
+                            imageUrl = detail.imageUrl.orEmpty(),
+                            writerName = detail.writerName,
+                            title = detail.title,
+                            description = detail.description,
+                            instructions = detail.instructions,
+                        ),
+                    )
+                }
+            } catch (exception: CancellationException) {
+                throw exception
+            } catch (exception: Exception) {
+                // TODO: 실패 처리 (404 MISSION_NOT_FOUND 등)
+            }
         }
     }
 
     fun addMission(missionId: Long) {
-        // TODO: 미션 담기
+        viewModelScope.launch {
+            try {
+                repository.addMissionToBasket(missionId)
+            } catch (exception: CancellationException) {
+                throw exception
+            } catch (exception: Exception) {
+                // TODO: 실패 처리 (409 MISSION_ALREADY_IN_BASKET 등)
+            }
+        }
     }
 
     fun getRecommendMission() {
@@ -74,17 +98,30 @@ class EunjiViewModel @Inject constructor() : ViewModel() {
     }
 
     fun getHypeMission() {
-        _uiState.update {
-            it.copy(
-                hypeMissions = listOf(
-                    HomeHypeMissionUiModel(missionId = 1L, imgUrl = null, title = "1위 미션", content = "셀프사진 네컷 찍어보기"),
-                    HomeHypeMissionUiModel(missionId = 2L, imgUrl = null, title = "2위 미션", content = "셀프사진 네컷 찍어보기"),
-                    HomeHypeMissionUiModel(missionId = 3L, imgUrl = null, title = "3위 미션", content = "셀프사진 네컷 찍어보기"),
-                    HomeHypeMissionUiModel(missionId = 4L, imgUrl = null, title = "4위 미션", content = "셀프사진 네컷 찍어보기"),
-                    HomeHypeMissionUiModel(missionId = 5L, imgUrl = null, title = "5위 미션", content = "셀프사진 네컷 찍어보기"),
-                    HomeHypeMissionUiModel(missionId = 6L, imgUrl = null, title = "6위 미션", content = "셀프사진 네컷 찍어보기"),
-                ),
-            )
+        viewModelScope.launch {
+            try {
+                val missions = repository.getMissions().take(HYPE_MISSION_COUNT)
+                _uiState.update {
+                    it.copy(
+                        hypeMissions = missions.mapIndexed { index, mission ->
+                            HomeHypeMissionUiModel(
+                                missionId = mission.missionId,
+                                imgUrl = mission.imageUrl,
+                                title = "${index + 1}위 미션",
+                                content = mission.title,
+                            )
+                        },
+                    )
+                }
+            } catch (exception: CancellationException) {
+                throw exception
+            } catch (exception: Exception) {
+                // TODO: 실패 처리 (현재는 빈 그리드 유지)
+            }
         }
+    }
+
+    private companion object {
+        const val HYPE_MISSION_COUNT = 6
     }
 }
