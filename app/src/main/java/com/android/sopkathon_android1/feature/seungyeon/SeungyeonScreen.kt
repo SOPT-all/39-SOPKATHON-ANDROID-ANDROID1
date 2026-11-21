@@ -163,7 +163,7 @@ private fun ProfileCard(name: String, ageGroup: String, profileImageUrl: String?
 private fun SectionTitle(text: String) {
     Text(
         text = text,
-        style = NolItTheme.typography.h2Sb,
+        style = NolItTheme.typography.h3Md,
         color = NolItTheme.colors.textPrimary,
     )
 }
