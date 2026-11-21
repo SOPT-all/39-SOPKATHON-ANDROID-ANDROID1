@@ -1,5 +1,6 @@
 package com.android.sopkathon_android1.core.network
 
+import com.android.sopkathon_android1.data.api.MissionApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,4 +44,9 @@ object NetworkModule {
         .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
+
+    @Provides
+    @Singleton
+    fun provideMissionApi(retrofit: Retrofit): MissionApi =
+        retrofit.create(MissionApi::class.java)
 }
