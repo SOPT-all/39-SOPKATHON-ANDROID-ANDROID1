@@ -1,11 +1,9 @@
-# 문화 미션 앱
+# 놀잇
 
 중고등학생이 소개한 요즘 유행을 50~64세가 직접 따라 해보고 인증할 수 있는 문화 미션 앱
 
 
-## 📌 MVP 기능 범위
-
-**Must** 없으면 시연이 안 됨, 무조건 만든다 · **Should** 서비스 가치를 살림, 필수 끝나면 바로 · **Could** 있으면 좋음, 시간 남으면 · **제외** 이번에 만들지 않음
+## 📌 MVP 주요 기능 범위
 
 | 우선순위 | 기능 |
 | --- | --- |
@@ -24,20 +22,6 @@
 | <img src="docs/images/choi-eunji.png" alt="최은지" width="160" /> | <img src="docs/images/namgung-hyemin.png" alt="남궁혜민" width="160" /> | <img src="docs/images/shin-seungyeon.png" alt="신승연" width="160" /> | <img src="docs/images/jeong-heejin.png" alt="정희진" width="160" /> |
 | A · 홈 | B · 미션 수행·인증 | D · 마이페이지 | C · 미션 제작 |
 
-## ✨ 주요 기능
-
-### 50~64세 사용자
-
-- 분야별 미션 탐색 및 상세 정보 확인
-- 미션 참여와 도전 인증
-- 사진, 한 줄 후기, 도전 후 기분 기록
-- 참여 중·완료한 미션과 받은 반응 확인
-
-### 중고등학생 사용자
-
-- 문화 미션 작성 및 등록
-- 자신이 만든 미션의 참여·완료 현황 확인
-- 도전 후기 확인, 응원 및 답장 보내기
 
 ## 🛠 기술 스택
 
@@ -51,6 +35,19 @@
 > 세부 라이브러리와 버전은 구현이 확정되면 업데이트합니다.
 
 ## 🌿 컨벤션 및 브랜치 전략
+### 코딩컨벤션
+
+| 이름 | naming rules |
+| --- | --- |
+| function | Lower Camel Case, Upper Camel Case (=Pascal Case) |
+| variable | Lower Camel Case |
+| class | Upper Camel Case (=Pascal Case) |
+| interface | Upper Camel Case (=Pascal Case) |
+| const val | Screaming Snake Case |
+| drawable file name | 제목 열어서 상세 확인 |
+| dto class | Upper Camel Case (=Pascal Case) |
+| retrofit function | Lower Camel Case |
+| package | 소문자 |
 
 ### 브랜치
 
