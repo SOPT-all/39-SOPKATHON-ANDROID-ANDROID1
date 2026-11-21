@@ -48,6 +48,17 @@ class RemoteMissionBasketRepositoryTest {
         assertEquals("USER_NOT_FOUND", failure.code)
     }
 
+    @Test fun `미션 상세 API의 설명과 수행 방법을 인증 화면 모델로 변환한다`() = runTest {
+        val repository = repository { request ->
+            assertEquals("GET", request.method)
+            assertEquals("/v1/missions/4", request.url.encodedPath)
+            response(request, 200, """{"status":200,"code":"string","message":"ok","data":{"description":"사진으로 기록해요","instructions":"사진을 찍고 후기를 작성해요"}}""")
+        }
+        val detail = repository.getMissionDetail(4L)
+        assertEquals("사진으로 기록해요", detail.description)
+        assertEquals("사진을 찍고 후기를 작성해요", detail.instructions)
+    }
+
     private fun repository(handler: (Request) -> Response): RemoteMissionBasketRepository {
         val client = OkHttpClient.Builder().addInterceptor { chain -> handler(chain.request()) }.build()
         val api = Retrofit.Builder()

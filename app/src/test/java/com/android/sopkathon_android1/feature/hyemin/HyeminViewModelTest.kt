@@ -25,6 +25,7 @@ class HyeminViewModelTest {
         repository,
         object : MissionBasketRepository {
             override suspend fun getMissions() = repository.getMissions()
+            override suspend fun getMissionDetail(missionId: Long) = repository.getMissionDetail(missionId)
         },
         object : ReviewRepository {
             override suspend fun getReviews() = repository.getReviews()

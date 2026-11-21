@@ -49,22 +49,14 @@ class HyeminDetailViewModel @Inject constructor(
                 val mission = missionBasketRepository.getMissions().firstOrNull {
                     it.missionBasketId.toString() == missionBasketId
                 }
-                val detail = mission?.let {
-                    try {
-                        repository.getMissionDetail(it.missionId)
-                    } catch (e: CancellationException) {
-                        throw e
-                    } catch (_: Exception) {
-                        null
-                    }
-                }
+                val detail = mission?.let { missionBasketRepository.getMissionDetail(it.missionId) }
                 val draft = repository.getDraft(missionBasketId) ?: HyeminMissionDraft()
                 review.edit { replace(0, length, draft.review) }
                 _uiState.update { it.copy(mission = mission, description = detail?.description.orEmpty(), instructions = detail?.instructions.orEmpty(), loading = false, photo = draft.photo, liked = draft.liked) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _uiState.update { it.copy(loading = false) }
+                _uiState.update { it.copy(mission = null, loading = false) }
             }
         }
     }

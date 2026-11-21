@@ -49,6 +49,7 @@ class HyeminDetailViewModelTest {
     private fun viewModel(repository: FakeHyeminRepository, id: String): HyeminDetailViewModel {
         val basketRepository = object : MissionBasketRepository {
             override suspend fun getMissions() = repository.getMissions()
+            override suspend fun getMissionDetail(missionId: Long) = repository.getMissionDetail(missionId)
         }
         val completionRepository = object : MissionCompletionRepository {
             override suspend fun completeMission(missionBasketId: Long, imageKey: String, content: String): MissionVerificationResult {
@@ -93,6 +94,7 @@ class HyeminDetailViewModelTest {
             repository,
             object : MissionBasketRepository {
                 override suspend fun getMissions() = repository.getMissions()
+                override suspend fun getMissionDetail(missionId: Long) = repository.getMissionDetail(missionId)
             },
             object : ReviewRepository {
                 override suspend fun getReviews() = repository.getReviews()

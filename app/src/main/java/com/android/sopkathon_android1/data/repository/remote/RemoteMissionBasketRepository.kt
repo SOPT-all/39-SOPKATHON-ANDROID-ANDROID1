@@ -5,6 +5,7 @@ import com.android.sopkathon_android1.data.api.MissionApi
 import com.android.sopkathon_android1.data.dto.base.BaseResponse
 import com.android.sopkathon_android1.data.dto.hyemin.MissionBasketDto
 import com.android.sopkathon_android1.data.model.HyeminMission
+import com.android.sopkathon_android1.data.model.HyeminMissionDetail
 import com.android.sopkathon_android1.data.repository.MissionBasketRepository
 import java.io.IOException
 import javax.inject.Inject
@@ -21,6 +22,16 @@ class RemoteMissionBasketRepository @Inject constructor(
         val completed = api.getCompletedMissions(USER_ID).requireData(json)
             .map { it.toModel(completed = true) }
         return (incomplete + completed).sortedByDescending { it.createdAt }
+    }
+
+    override suspend fun getMissionDetail(missionId: Long): HyeminMissionDetail {
+        val detail = requireNotNull(api.getMissionDetail(missionId).data) {
+            "미션 상세 응답에 data가 없습니다."
+        }
+        return HyeminMissionDetail(
+            description = detail.description,
+            instructions = detail.instructions,
+        )
     }
 
     private fun Response<BaseResponse<List<MissionBasketDto>>>.requireData(json: Json): List<MissionBasketDto> {
