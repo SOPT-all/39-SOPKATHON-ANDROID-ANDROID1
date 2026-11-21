@@ -69,8 +69,8 @@
 
 ## 📸 Android 팀원 사진 (Before)
 
-<!-- 팀원 사진을 받은 뒤 이미지 경로와 설명을 추가합니다. -->
+![Android 팀원 단체사진 (Before)](docs/images/android-team-before.jpg)
 
 | 최은지 | 남궁혜민 | 신승연 | 정희진 |
 | --- | --- | --- | --- |
-| 사진 추가 예정 | 사진 추가 예정 | 사진 추가 예정 | 사진 추가 예정 |
+| <img src="docs/images/choi-eunji.png" alt="최은지" width="160" /> | <img src="docs/images/namgung-hyemin.png" alt="남궁혜민" width="160" /> | <img src="docs/images/shin-seungyeon.png" alt="신승연" width="160" /> | <img src="docs/images/jeong-heejin.png" alt="정희진" width="160" /> |
