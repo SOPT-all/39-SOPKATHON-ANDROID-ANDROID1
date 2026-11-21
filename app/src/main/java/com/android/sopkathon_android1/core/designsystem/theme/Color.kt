@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 private val primary = Color(0xFFD7FF3F)
 private val primarySoft = Color(0xFFF1FFC4)
 private val secondary = Color(0xFF7048F5)
+private val secondary02 = Color(0xFF30106F)
 
 // Neutral
 private val background = Color(0xFFFFFFFF)
@@ -40,6 +41,7 @@ data class NolItColors(
     val primary: Color,
     val primarySoft: Color,
     val secondary: Color,
+    val secondary02: Color,
     val background: Color,
     val surface: Color,
     val textPrimary: Color,
@@ -67,6 +69,7 @@ val defaultNolItColors = NolItColors(
     primary = primary,
     primarySoft = primarySoft,
     secondary = secondary,
+    secondary02 = secondary02,
     background = background,
     surface = surface,
     textPrimary = textPrimary,
