@@ -19,6 +19,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.sopkathon_android1.core.designsystem.extension.noRippleClickable
 import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+private val missionDateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+
+fun String.toMissionDateLabel(today: LocalDate = LocalDate.now()): String {
+    val date = runCatching { LocalDateTime.parse(this).toLocalDate() }.getOrNull()
+        ?: return this
+    return if (date == today) "TODAY" else date.format(missionDateFormatter)
+}
 
 @Composable
 fun ChallengeMissionCard(
