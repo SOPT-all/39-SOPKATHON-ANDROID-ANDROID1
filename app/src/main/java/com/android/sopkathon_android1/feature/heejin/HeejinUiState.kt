@@ -2,7 +2,7 @@ package com.android.sopkathon_android1.feature.heejin
 
 import androidx.compose.foundation.text.input.TextFieldState
 
-internal const val MISSION_TITLE_MAX_LENGTH = 40
+internal const val MISSION_TITLE_MAX_LENGTH = 15
 internal const val MISSION_INTRODUCTION_MAX_LENGTH = 100
 internal const val MISSION_INSTRUCTIONS_MAX_LENGTH = 100
 
