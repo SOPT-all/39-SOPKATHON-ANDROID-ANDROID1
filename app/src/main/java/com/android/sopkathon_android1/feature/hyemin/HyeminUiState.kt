@@ -12,5 +12,4 @@ data class HyeminUiState(
     val error: Boolean = false,
     val tab: ChallengeTab = ChallengeTab.MY,
     val completedOnly: Boolean = false,
-    val oldestFirst: Boolean = false,
 )

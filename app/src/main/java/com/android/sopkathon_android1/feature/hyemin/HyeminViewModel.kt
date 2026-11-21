@@ -60,5 +60,4 @@ class HyeminViewModel @Inject constructor(private val repository: HyeminReposito
         }
     }
     fun filterCompleted(value: Boolean) { _uiState.update { it.copy(completedOnly = value) } }
-    fun toggleSort() { _uiState.update { it.copy(oldestFirst = !it.oldestFirst) } }
 }

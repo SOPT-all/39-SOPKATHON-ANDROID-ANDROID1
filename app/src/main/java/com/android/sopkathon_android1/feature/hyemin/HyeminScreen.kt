@@ -32,7 +32,6 @@ fun HyeminRoute(
         uiState = state,
         onTabSelected = viewModel::selectTab,
         onCompletedChanged = viewModel::filterCompleted,
-        onSort = viewModel::toggleSort,
         onMissionClick = { onMissionClick(it.missionId.toString()) },
         onRetry = viewModel::loadMissions,
         onReviewLikeClick = viewModel::toggleReviewLike,
@@ -44,7 +43,6 @@ fun HyeminScreen(
     uiState: HyeminUiState,
     onTabSelected: (ChallengeTab) -> Unit,
     onCompletedChanged: (Boolean) -> Unit,
-    onSort: () -> Unit,
     onMissionClick: (HyeminMission) -> Unit,
     onRetry: () -> Unit,
     onReviewLikeClick: (Long) -> Unit,
@@ -67,7 +65,6 @@ fun HyeminScreen(
             .filter { it.completed == state.completedOnly }
             .sortedByDescending { it.createdAt }
         val reviews = state.reviews.sortedByDescending { it.createdAt }
-            .let { if (state.oldestFirst) it.reversed() else it }
 
         LazyColumn(
             modifier = Modifier
@@ -83,9 +80,7 @@ fun HyeminScreen(
                 HyeminMissionListHeader(
                     selectedTab = state.tab,
                     completedOnly = state.completedOnly,
-                    oldestFirst = state.oldestFirst,
                     onCompletedChanged = onCompletedChanged,
-                    onSort = onSort,
                 )
                 Spacer(Modifier.height(if (state.tab == ChallengeTab.OUR) 28.dp else 12.dp))
                 if (state.tab == ChallengeTab.OUR && state.likeError) {
@@ -146,7 +141,7 @@ private fun HyeminScreenPreview() {
     NolItTheme {
         HyeminScreen(
             uiState = HyeminUiState(loading = false),
-            onTabSelected = {}, onCompletedChanged = {}, onSort = {},
+            onTabSelected = {}, onCompletedChanged = {},
             onMissionClick = {}, onRetry = {}, onReviewLikeClick = {},
         )
     }

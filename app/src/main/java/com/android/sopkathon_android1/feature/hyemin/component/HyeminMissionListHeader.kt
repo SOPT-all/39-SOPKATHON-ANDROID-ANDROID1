@@ -1,33 +1,25 @@
 package com.android.sopkathon_android1.feature.hyemin.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.sopkathon_android1.R
 import com.android.sopkathon_android1.core.designsystem.component.ChallengeTab
 import com.android.sopkathon_android1.core.designsystem.component.NolItToggle
 import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
-import com.android.sopkathon_android1.core.designsystem.extension.noRippleClickable
 
 @Composable
 fun HyeminMissionListHeader(
     selectedTab: ChallengeTab,
     completedOnly: Boolean,
-    oldestFirst: Boolean,
     onCompletedChanged: (Boolean) -> Unit,
-    onSort: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -46,20 +38,8 @@ fun HyeminMissionListHeader(
                 )
             }
         } else {
-            Row(
-                modifier = Modifier.heightIn(min = 48.dp).noRippleClickable(role = androidx.compose.ui.semantics.Role.Button, onClick = onSort),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    if (oldestFirst) "오래된순" else "최신순",
-                    style = NolItTheme.typography.body2Md
-                )
-                Image(
-                    painter = painterResource(R.drawable.ic_mission_sort_down),
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                )
-            }
+            HyeminLatestSort()
+
         }
     }
 }
