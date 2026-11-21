@@ -14,8 +14,8 @@ fun NavController.navigateToHyemin(navOptions: NavOptions? = null) {
     navigate(route = Hyemin, navOptions = navOptions)
 }
 
-fun NavGraphBuilder.hyeminNavGraph() {
+fun NavGraphBuilder.hyeminNavGraph(onMissionClick: (String) -> Unit) {
     composable<Hyemin> {
-        HyeminRoute()
+        HyeminRoute(onMissionClick = onMissionClick)
     }
 }
