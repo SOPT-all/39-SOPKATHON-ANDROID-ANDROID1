@@ -32,6 +32,7 @@ fun NolItMissionCompleteHypeButton(
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     val shape = RoundedCornerShape(16.dp)
     val backgroundColor = if (isSelected) NolItTheme.colors.neutral600 else NolItTheme.colors.neutral25
@@ -51,7 +52,7 @@ fun NolItMissionCompleteHypeButton(
             .background(backgroundColor)
             .border(width = 1.dp, color = borderColor, shape = shape)
             .semantics { selected = isSelected }
-            .noRippleClickable(role = Role.Button, onClick = onClick)
+            .noRippleClickable(enabled = enabled, role = Role.Button, onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 18.dp),
         contentAlignment = Alignment.Center,
     ) {

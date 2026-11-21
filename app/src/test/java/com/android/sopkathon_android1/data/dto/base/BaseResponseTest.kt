@@ -32,4 +32,23 @@ class BaseResponseTest {
         assertEquals("RESOURCE_NOT_FOUND", response.code)
         assertNull(response.data)
     }
+    @Test
+    fun parsesReviewErrorWithoutData() {
+        val response = Json.decodeFromString<BaseResponse<List<com.android.sopkathon_android1.data.dto.hyemin.MissionReviewDto>>>(
+            """{"status":500,"code":"INTERNAL_SERVER_ERROR","message":"오류가 발생했습니다. 다시 시도해 주세요."}"""
+        )
+        assertEquals("INTERNAL_SERVER_ERROR", response.code)
+        assertNull(response.data)
+    }
+
+    @Test
+    fun parsesReviewSuccess() {
+        val response = Json.decodeFromString<BaseResponse<List<com.android.sopkathon_android1.data.dto.hyemin.MissionReviewDto>>>(
+            """{"status":0,"code":"string","message":"string","data":[{"reviewId":1,"imageUrl":"https://example.com/reviews/1.jpg","title":"셀프 사진 네 컷 찍어보기","content":"처음엔 어색했는데 재밌었어요.","writerName":"민수","createdAt":"2026-11-22T14:30:00","likeCount":4,"isLiked":true}]}"""
+        )
+        val review = response.data!!.single()
+        assertEquals(1L, review.reviewId)
+        assertEquals(4, review.likeCount)
+        assertEquals(true, review.isLiked)
+    }
 }

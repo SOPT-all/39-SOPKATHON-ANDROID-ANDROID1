@@ -1,10 +1,11 @@
 package com.android.sopkathon_android1.feature.eunji
 
-import com.android.sopkathon_android1.data.model.EunjiItem
+import com.android.sopkathon_android1.feature.eunji.model.HomeHypeMissionUiModel
+import com.android.sopkathon_android1.feature.eunji.model.HomeRecommendUiModel
+import com.android.sopkathon_android1.feature.eunji.model.MissionDetailModel
 
-sealed interface EunjiUiState {
-    data object Loading : EunjiUiState
-    data class Success(val items: List<EunjiItem>) : EunjiUiState
-    data object Empty : EunjiUiState
-    data object Error : EunjiUiState
-}
+data class EunjiUiState(
+    val recommendMissions: List<HomeRecommendUiModel> = emptyList(),
+    val hypeMissions: List<HomeHypeMissionUiModel> = emptyList(),
+    val missionDetail: MissionDetailModel = MissionDetailModel(),
+)

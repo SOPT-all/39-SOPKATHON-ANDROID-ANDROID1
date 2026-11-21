@@ -31,10 +31,17 @@ fun NolItHeader(
     modifier: Modifier = Modifier,
     type: NolItHeaderType = NolItHeaderType.DEFAULT,
     onCloseClick: () -> Unit = {},
+    onSaveClick: () -> Unit = {},
+    enabled: Boolean = true,
 ) {
     when (type) {
         NolItHeaderType.DEFAULT -> NolItDefaultHeader(modifier)
-        NolItHeaderType.VERIFICATION -> NolItVerificationHeader(onCloseClick, modifier)
+        NolItHeaderType.VERIFICATION -> NolItVerificationHeader(
+            onCloseClick = onCloseClick,
+            onSaveClick = onSaveClick,
+            enabled = enabled,
+            modifier = modifier,
+        )
     }
 }
 
@@ -85,6 +92,8 @@ private fun NolItDefaultHeader(modifier: Modifier = Modifier) {
 @Composable
 private fun NolItVerificationHeader(
     onCloseClick: () -> Unit,
+    onSaveClick: () -> Unit,
+    enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -100,11 +109,13 @@ private fun NolItVerificationHeader(
             contentDescription = "닫기",
             modifier = Modifier
                 .size(22.dp)
-                .noRippleClickable(role = Role.Button, onClick = onCloseClick),
+                .noRippleClickable(enabled = enabled, role = Role.Button, onClick = onCloseClick),
         )
         Text(
             text = "임시저장",
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier
+                .noRippleClickable(enabled = enabled, role = Role.Button, onClick = onSaveClick)
+                .padding(8.dp),
             style = NolItTheme.typography.body1Md,
             color = Color.Black,
         )
