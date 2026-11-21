@@ -9,8 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,6 +19,7 @@ import com.android.sopkathon_android1.R
 import com.android.sopkathon_android1.core.designsystem.component.*
 import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 import com.android.sopkathon_android1.data.model.HyeminMission
+import com.android.sopkathon_android1.feature.hyemin.component.HyeminMissionListHeader
 
 @Composable
 fun HyeminRoute(
@@ -82,39 +81,13 @@ fun HyeminScreen(
 
             Spacer(Modifier.height(if (state.tab == ChallengeTab.OUR) 31.dp else 12.dp))
 
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(if (state.tab == ChallengeTab.MY) "담은 미션" else "전체 미션", style = sectionStyle())
-                if (state.tab == ChallengeTab.MY) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("완료", style = NolItTheme.typography.caption1Md)
-                        Spacer(Modifier.width(8.dp))
-                        Switch(
-                            checked = state.completedOnly,
-                            onCheckedChange = onCompletedChanged,
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color.White,
-                                checkedTrackColor = NolItTheme.colors.border,
-                                uncheckedThumbColor = NolItTheme.colors.secondary,
-                                uncheckedTrackColor = NolItTheme.colors.border,
-                                uncheckedBorderColor = Color.Transparent,
-                                checkedBorderColor = Color.Transparent
-                            ),
-                            modifier = Modifier.height(28.dp),
-                        )
-                    }
-                } else {
-                    TextButton(onClick = onSort, contentPadding = PaddingValues(0.dp)) {
-                        Text(
-                            if (state.oldestFirst) "오래된순 ⌄" else "최신순 ⌄",
-                            style = NolItTheme.typography.body2Md
-                        )
-                    }
-                }
-            }
+            HyeminMissionListHeader(
+                selectedTab = state.tab,
+                completedOnly = state.completedOnly,
+                oldestFirst = state.oldestFirst,
+                onCompletedChanged = onCompletedChanged,
+                onSort = onSort,
+            )
             Spacer(Modifier.height(if (state.tab == ChallengeTab.OUR) 28.dp else 12.dp))
             when {
                 state.loading -> Box(
@@ -153,10 +126,6 @@ fun HyeminScreen(
         }
     }
 }
-
-@Composable
-private fun sectionStyle(): TextStyle =
-    NolItTheme.typography.body1Sb.copy(fontSize = 18.sp, lineHeight = 25.sp)
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 740)
 @Composable
