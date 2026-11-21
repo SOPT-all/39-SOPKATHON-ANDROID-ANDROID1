@@ -14,6 +14,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+    @Binds
+    @Singleton
+    abstract fun bindHyeminRepository(repository: com.android.sopkathon_android1.data.repository.fake.FakeHyeminRepository): com.android.sopkathon_android1.data.repository.HyeminRepository
+
     // 서버 연동 시 이 바인딩의 구현체를 실제 Repository로 교체한다.
     @Binds
     @Singleton
