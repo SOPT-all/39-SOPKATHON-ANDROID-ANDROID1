@@ -10,13 +10,9 @@
 
 홈에서 미션을 탐색하고 담은 뒤, 미션 수행·인증 탭에서 도전을 완료합니다. 미션 제작과 마이페이지까지의 화면 흐름을 확인할 수 있습니다.
 
-| 홈 · 미션 탐색 | 미션 상세 · 담기 | 담은 미션 목록 |
-| :---: | :---: | :---: |
-| <img src="docs/images/wireframe-home.png" alt="홈 · 미션 탐색" width="240" /> | <img src="docs/images/wireframe-mission-detail.png" alt="미션 상세 · 담기" width="240" /> | <img src="docs/images/wireframe-my-missions.png" alt="담은 미션 목록" width="240" /> |
-
-| 미션 수행 · 인증 | 미션 제작 | 마이페이지 |
-| :---: | :---: | :---: |
-| <img src="docs/images/wireframe-mission-certification.png" alt="미션 수행 · 인증" width="240" /> | <img src="docs/images/wireframe-mission-create.png" alt="미션 제작" width="240" /> | <img src="docs/images/wireframe-mypage.png" alt="마이페이지" width="240" /> |
+| 홈 화면 | 수행·인증 화면 | 미션 제작 화면 | 마이페이지 화면 |
+| :---: | :---: | :---: | :---: |
+| <img src="docs/images/wireframe-home.png" alt="홈 화면" width="240" /> | <img src="docs/images/wireframe-mission-certification.png" alt="수행·인증 화면" width="240" /> | 아직 제작 미완료 | <img src="docs/images/wireframe-mypage.png" alt="마이페이지 화면" width="240" /> |
 
 ## 👥 팀원 및 역할
 
