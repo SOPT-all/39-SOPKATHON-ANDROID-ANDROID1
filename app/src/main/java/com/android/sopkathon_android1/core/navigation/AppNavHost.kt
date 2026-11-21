@@ -20,7 +20,7 @@ import com.android.sopkathon_android1.feature.heejin.HeejinScreen
 import com.android.sopkathon_android1.feature.hyemin.HyeminRoute
 import com.android.sopkathon_android1.feature.hyemin.HyeminScreen
 import com.android.sopkathon_android1.feature.main.MainRoute
-import com.android.sopkathon_android1.feature.main.MainScreen
+import com.android.sopkathon_android1.feature.main.MainRouteScreen
 import com.android.sopkathon_android1.feature.seungyeon.SeungyeonRoute
 import com.android.sopkathon_android1.feature.seungyeon.SeungyeonScreen
 
@@ -66,7 +66,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             startDestination = MainRoute,
             modifier = Modifier.padding(innerPadding),
         ) {
-            composable<MainRoute> { MainScreen() }
+            composable<MainRoute> { MainRouteScreen() }
             composable<EunjiRoute> { EunjiScreen() }
             composable<HyeminRoute> { HyeminScreen() }
             composable<HeejinRoute> { HeejinScreen() }
