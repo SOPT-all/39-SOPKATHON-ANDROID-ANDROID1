@@ -11,6 +11,8 @@ import com.android.sopkathon_android1.feature.heejin.HeejinRoute
 import com.android.sopkathon_android1.feature.heejin.HeejinScreen
 import com.android.sopkathon_android1.feature.hyemin.HyeminRoute
 import com.android.sopkathon_android1.feature.hyemin.HyeminScreen
+import com.android.sopkathon_android1.feature.main.MainRoute
+import com.android.sopkathon_android1.feature.main.MainScreen
 import com.android.sopkathon_android1.feature.seungyeon.SeungyeonRoute
 import com.android.sopkathon_android1.feature.seungyeon.SeungyeonScreen
 
@@ -20,9 +22,17 @@ fun AppNavHost(modifier: Modifier = Modifier) {
 
     NavHost(
         navController = navController,
-        startDestination = EunjiRoute,
+        startDestination = MainRoute,
         modifier = modifier,
     ) {
+        composable<MainRoute> {
+            MainScreen(
+                onEunjiClick = { navController.navigate(EunjiRoute) },
+                onHyeminClick = { navController.navigate(HyeminRoute) },
+                onHeejinClick = { navController.navigate(HeejinRoute) },
+                onSeungyeonClick = { navController.navigate(SeungyeonRoute) },
+            )
+        }
         composable<EunjiRoute> { EunjiScreen() }
         composable<HyeminRoute> { HyeminScreen() }
         composable<HeejinRoute> { HeejinScreen() }
