@@ -31,7 +31,7 @@
 - 커밋 제목: `[카테고리/#이슈번호] 작업 내용`
 - 예: `[feat/#30] 홈 화면 구현`, `[add/#1] 폰트 파일 추가`
 - PR 제목: `[유형/#이슈번호] 작업 내용` (예: `[FEAT/#6] 홈화면 구현`)
-- PR 본문의 `Related issue`에 `closed #이슈번호`를 적는다. 현재 GitHub 기본 브랜치는 `main`이므로 `develop` 대상 PR에서는 이 키워드만으로 이슈가 자동 종료되지 않는다. 필요하면 이슈를 수동으로 연결하거나 종료한다.
+- PR 본문의 `Related issue`에 `closed #이슈번호`를 적는다. 현재 GitHub 기본 브랜치는 `develop`이며, `develop` 대상 PR이 병합되면 이 키워드로 이슈가 자동 종료된다.
 - 이슈는 `.github/ISSUE_TEMPLATE/issue.md`, PR은 `.github/pull_request_template.md`를 사용한다.
 
 ## Android 구현 기준
