@@ -35,7 +35,8 @@ GitHub 기본 브랜치가 `main`인 동안 이슈 자동 종료 키워드는 `m
 - 의존성 주입은 **Hilt**, 화면 구조는 **MVVM**을 사용합니다.
 - Google 권장 앱 아키텍처에 따라 UI 계층은 화면과 ViewModel, 데이터 계층은 저장소와 데이터 소스로 구성합니다. 도메인 계층은 필요한 경우에만 추가합니다.
 - 공통 테마와 컴포넌트는 `core/designsystem`, 화면 이동은 `core/navigation`, 기능별 화면은 `feature`, API DTO는 `data/dto`에 둡니다.
-- 공통 API 응답 모델은 [`BaseResponse`](../app/src/main/java/com/android/sopkathon_android1/data/dto/base/BaseResponse.kt)이며 `status: Int`, `code: String`, `message: String`, `data: T?` 필드를 사용합니다. 화면 분기는 `message`가 아닌 `code`를 기준으로 합니다. 실제 서버 주소와 개별 API 응답 필드는 서버 명세에 맞춰 연결합니다.
+- 공통 API 응답 모델은 [`BaseResponse`](../app/src/main/java/com/android/sopkathon_android1/data/dto/base/BaseResponse.kt)이며 `status: Int`, `code: String`, `message: String`, `data: T?` 필드를 사용합니다. 화면 분기는 `message`가 아닌 `code`를 기준으로 합니다.
+- 서버 기본 주소는 [`NetworkModule`](../app/src/main/java/com/android/sopkathon_android1/core/network/NetworkModule.kt)에 설정되어 있습니다. 서버와 개별 API가 준비되면 Retrofit 인터페이스에 상대 경로와 요청·응답 DTO를 추가합니다.
 - 의존성 버전은 [`gradle/libs.versions.toml`](../gradle/libs.versions.toml)에서 관리합니다.
 
 ## 확인 방법
