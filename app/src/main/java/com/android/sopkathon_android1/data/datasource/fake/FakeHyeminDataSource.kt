@@ -55,6 +55,10 @@ class FakeHyeminDataSource @Inject constructor() {
 
     fun isCompleted(missionId: Long): Boolean = missionId in completedMissionIds
 
+    fun markCompleted(missionId: Long) {
+        completedMissionIds.add(missionId)
+    }
+
     // API 응답 구조를 참고한 Mock 값이며 실제 네트워크 요청은 하지 않는다.
     suspend fun getMissionDetail(missionId: Long): HyeminMissionDetail {
         delay(500)

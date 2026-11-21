@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.sopkathon_android1.core.designsystem.component.ChallengeTab
 import com.android.sopkathon_android1.data.repository.HyeminRepository
+import com.android.sopkathon_android1.data.repository.MissionBasketRepository
+import com.android.sopkathon_android1.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
@@ -14,7 +16,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class HyeminViewModel @Inject constructor(private val repository: HyeminRepository) : ViewModel() {
+class HyeminViewModel @Inject constructor(
+    private val repository: HyeminRepository,
+    private val missionBasketRepository: MissionBasketRepository,
+    private val reviewRepository: ReviewRepository,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(HyeminUiState())
     val uiState = _uiState.asStateFlow()
     private var loadJob: Job? = null
@@ -27,10 +33,10 @@ class HyeminViewModel @Inject constructor(private val repository: HyeminReposito
             _uiState.update { it.copy(loading = true, error = false) }
             try {
                 if (_uiState.value.tab == ChallengeTab.MY) {
-                    val missions = repository.getMissions()
+                    val missions = missionBasketRepository.getMissions()
                     _uiState.update { it.copy(missions = missions, loading = false) }
                 } else {
-                    val reviews = repository.getReviews()
+                    val reviews = reviewRepository.getReviews()
                     _uiState.update { it.copy(reviews = reviews, loading = false) }
                 }
             } catch (e: CancellationException) { throw e

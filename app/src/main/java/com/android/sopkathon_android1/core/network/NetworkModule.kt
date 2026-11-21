@@ -2,6 +2,7 @@ package com.android.sopkathon_android1.core.network
 
 import com.android.sopkathon_android1.data.api.ImageApi
 import com.android.sopkathon_android1.data.api.MissionApi
+import com.android.sopkathon_android1.data.api.ReviewApi
 import com.android.sopkathon_android1.data.service.HeejinService
 import com.android.sopkathon_android1.data.service.ImageService
 import dagger.Module
@@ -45,6 +46,14 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideMissionApi(retrofit: Retrofit): MissionApi = retrofit.create(MissionApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideReviewApi(retrofit: Retrofit): ReviewApi = retrofit.create(ReviewApi::class.java)
+
+    @Provides
+    @Singleton
     fun provideJson(): Json = Json { ignoreUnknownKeys = true }
 
     @Provides
@@ -62,8 +71,4 @@ object NetworkModule {
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
 
-    @Provides
-    @Singleton
-    fun provideMissionApi(retrofit: Retrofit): MissionApi =
-        retrofit.create(MissionApi::class.java)
 }

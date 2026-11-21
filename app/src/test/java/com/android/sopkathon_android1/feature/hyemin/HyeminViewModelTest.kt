@@ -5,6 +5,8 @@ import com.android.sopkathon_android1.data.datasource.fake.FakeHyeminReviewDataS
 import com.android.sopkathon_android1.core.designsystem.component.ChallengeTab
 import com.android.sopkathon_android1.data.datasource.fake.FakeHyeminScenario
 import com.android.sopkathon_android1.data.repository.fake.FakeHyeminRepository
+import com.android.sopkathon_android1.data.repository.MissionBasketRepository
+import com.android.sopkathon_android1.data.repository.ReviewRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -19,8 +21,18 @@ class HyeminViewModelTest {
     @Before fun setup() { Dispatchers.setMain(StandardTestDispatcher()) }
     @After fun cleanup() { Dispatchers.resetMain() }
 
+    private fun viewModel(repository: FakeHyeminRepository) = HyeminViewModel(
+        repository,
+        object : MissionBasketRepository {
+            override suspend fun getMissions() = repository.getMissions()
+        },
+        object : ReviewRepository {
+            override suspend fun getReviews() = repository.getReviews()
+        },
+    )
+
     @Test fun `조회 로딩 이후 미완료와 완료 미션을 제공한다`() = runTest {
-        val vm = HyeminViewModel(FakeHyeminRepository(FakeHyeminDataSource(), FakeHyeminReviewDataSource()))
+        val vm = viewModel(FakeHyeminRepository(FakeHyeminDataSource(), FakeHyeminReviewDataSource()))
         runCurrent()
         assertTrue(vm.uiState.value.loading)
         advanceUntilIdle()
@@ -63,7 +75,7 @@ class HyeminViewModelTest {
 
     @Test fun `조회 오류 후 재시도하고 빈 결과를 정상 처리한다`() = runTest {
         val source = FakeHyeminDataSource().apply { scenario = FakeHyeminScenario.ERROR }
-        val vm = HyeminViewModel(FakeHyeminRepository(source, FakeHyeminReviewDataSource()))
+        val vm = viewModel(FakeHyeminRepository(source, FakeHyeminReviewDataSource()))
         advanceUntilIdle()
         assertTrue(vm.uiState.value.error)
         source.scenario = FakeHyeminScenario.EMPTY
@@ -76,7 +88,7 @@ class HyeminViewModelTest {
 
     @Test fun `모두의 도전은 인증글을 조회하고 좋아요를 반영한다`() = runTest {
         val source = FakeHyeminReviewDataSource()
-        val vm = HyeminViewModel(FakeHyeminRepository(FakeHyeminDataSource(), source))
+        val vm = viewModel(FakeHyeminRepository(FakeHyeminDataSource(), source))
         advanceUntilIdle()
         vm.selectTab(ChallengeTab.OUR)
         runCurrent()
@@ -99,7 +111,7 @@ class HyeminViewModelTest {
 
     @Test fun `인증글 500 응답은 오류이고 재시도한 빈 응답은 정상이다`() = runTest {
         val source = FakeHyeminReviewDataSource().apply { scenario = FakeHyeminScenario.ERROR }
-        val vm = HyeminViewModel(FakeHyeminRepository(FakeHyeminDataSource(), source))
+        val vm = viewModel(FakeHyeminRepository(FakeHyeminDataSource(), source))
         advanceUntilIdle()
         vm.selectTab(ChallengeTab.OUR)
         advanceUntilIdle()
