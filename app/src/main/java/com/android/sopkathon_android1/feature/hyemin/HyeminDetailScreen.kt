@@ -6,7 +6,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.android.sopkathon_android1.R
 import com.android.sopkathon_android1.core.designsystem.component.*
 import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
+import com.android.sopkathon_android1.core.designsystem.extension.noRippleClickable
 import com.android.sopkathon_android1.data.model.HyeminMission
 
 @Composable
@@ -68,8 +68,8 @@ fun HyeminDetailScreen(
             uiState.loading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
             uiState.mission == null -> Column(Modifier.align(Alignment.Center)) {
                 Text("미션을 불러오지 못했어요")
-                TextButton(onClick = onRetry) { Text("다시 시도") }
-                TextButton(onClick = onClose) { Text("닫기") }
+                Text("다시 시도", Modifier.noRippleClickable(role = androidx.compose.ui.semantics.Role.Button, onClick = onRetry).padding(12.dp), color = NolItTheme.colors.secondary)
+                Text("닫기", Modifier.noRippleClickable(role = androidx.compose.ui.semantics.Role.Button, onClick = onClose).padding(12.dp), color = NolItTheme.colors.secondary)
             }
             else -> HyeminDetailContent(uiState, review, onClose, onSave, onPhotoClick, onLike, onComplete)
         }
@@ -104,10 +104,10 @@ private fun HyeminDetailContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = onClose, enabled = !state.submitting) {
+            Box(Modifier.size(40.dp).noRippleClickable(enabled = !state.submitting, role = androidx.compose.ui.semantics.Role.Button, onClick = onClose), contentAlignment = Alignment.Center) {
                 Image(painterResource(R.drawable.ic_mission_close), "닫기", Modifier.size(22.dp))
             }
-            TextButton(onClick = onSave, enabled = !state.submitting) {
+            Box(Modifier.height(40.dp).noRippleClickable(enabled = !state.submitting, role = androidx.compose.ui.semantics.Role.Button, onClick = onSave).padding(horizontal = 8.dp), contentAlignment = Alignment.Center) {
                 Text(
                     "임시저장",
                     style = NolItTheme.typography.body1Md.copy(fontSize = 18.sp, lineHeight = 25.sp)
@@ -124,22 +124,6 @@ private fun HyeminDetailContent(
             )
             Spacer(Modifier.height(28.dp))
             Text(mission.title, color = NolItTheme.colors.neutral800, style = sectionStyle())
-            Spacer(Modifier.height(8.dp))
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 123.dp)
-                    .background(NolItTheme.colors.primarySoft, RoundedCornerShape(8.dp))
-                    .padding(12.dp)
-            ) {
-                Text("미션 상세설명", style = NolItTheme.typography.body2Sb)
-                Spacer(Modifier.height(18.dp))
-                Text(
-                    mission.instructions,
-                    color = NolItTheme.colors.neutral800,
-                    style = NolItTheme.typography.caption2Rg.copy(fontSize = 12.sp)
-                )
-            }
             Spacer(Modifier.height(36.dp))
             Text("대표 사진", style = sectionStyle())
             Text(
@@ -153,7 +137,7 @@ private fun HyeminDetailContent(
                 Modifier
                     .align(Alignment.CenterHorizontally)
                     .size(180.dp)
-                    .clickable(
+                    .noRippleClickable(
                         enabled = !state.submitting,
                         onClickLabel = "갤러리에서 사진 선택",
                         onClick = onPhotoClick
@@ -184,7 +168,7 @@ private fun HyeminDetailContent(
                         if (state.liked) NolItTheme.colors.secondary else NolItTheme.colors.border,
                         RoundedCornerShape(16.dp)
                     )
-                    .clickable(
+                    .noRippleClickable(
                         enabled = !state.submitting,
                         role = androidx.compose.ui.semantics.Role.Checkbox,
                         onClick = onLike
@@ -205,25 +189,12 @@ private fun HyeminDetailContent(
                 )
             }
             Spacer(Modifier.height(32.dp))
-            Button(
+            CtaButton(
+                text = if (state.submitting) "인증 중..." else "도전 완료하기",
                 onClick = onComplete,
                 enabled = state.photo != null && review.text.isNotBlank() && !state.submitting,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                shape = RoundedCornerShape(30.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = NolItTheme.colors.secondary,
-                    disabledContainerColor = NolItTheme.colors.secondary.copy(alpha = .5f),
-                    disabledContentColor = Color.White,
-                    contentColor = Color.White
-                ),
-            ) {
-                Text(
-                    if (state.submitting) "인증 중..." else "도전 완료하기",
-                    style = sectionStyle().copy(color = Color.White)
-                )
-            }
+                modifier = Modifier.fillMaxWidth().height(50.dp),
+            )
             Spacer(Modifier.height(20.dp))
         }
     }
@@ -238,7 +209,7 @@ private fun sectionStyle(): TextStyle =
 private fun HyeminDetailScreenPreview() {
     NolItTheme {
         HyeminDetailScreen(
-            uiState = HyeminDetailUiState(loading = false, mission = HyeminMission("preview", "셀프 사진 네 컷 찍어보기", "", instructions = "1. 셀프 사진관 또는 휴대폰 준비\n2. 좋아하는 표정으로 네 컷 촬영\n3. 아래에 사진과 후기를 등록")),
+            uiState = HyeminDetailUiState(loading = false, mission = HyeminMission(missionBasketId = 12, missionId = 3, title = "셀프 사진 네 컷 찍어보기", imageUrl = "", createdAt = "2026-11-21T18:30:00")),
             review = remember { TextFieldState() },
             onClose = {}, onSave = {}, onPhotoClick = {}, onLike = {}, onComplete = {}, onRetry = {},
         )

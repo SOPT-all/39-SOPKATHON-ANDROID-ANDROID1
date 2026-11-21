@@ -26,14 +26,39 @@ class HyeminViewModel @Inject constructor(private val repository: HyeminReposito
         loadJob = viewModelScope.launch {
             _uiState.update { it.copy(loading = true, error = false) }
             try {
-                val missions = repository.getMissions()
-                _uiState.update { it.copy(missions = missions, loading = false) }
+                if (_uiState.value.tab == ChallengeTab.MY) {
+                    val missions = repository.getMissions()
+                    _uiState.update { it.copy(missions = missions, loading = false) }
+                } else {
+                    val reviews = repository.getReviews()
+                    _uiState.update { it.copy(reviews = reviews, loading = false) }
+                }
             } catch (e: CancellationException) { throw e
             } catch (e: Exception) { _uiState.update { it.copy(loading = false, error = true) } }
         }
     }
 
-    fun selectTab(tab: ChallengeTab) { _uiState.update { it.copy(tab = tab) } }
+    fun selectTab(tab: ChallengeTab) {
+        if (_uiState.value.tab == tab) return
+        _uiState.update { it.copy(tab = tab, likeError = false) }
+        loadMissions()
+    }
+
+    fun toggleReviewLike(reviewId: Long) {
+        viewModelScope.launch {
+            try {
+                val review = repository.toggleReviewLike(reviewId)
+                _uiState.update { state -> state.copy(
+                    reviews = state.reviews.map { if (it.reviewId == reviewId) review else it },
+                    likeError = false,
+                ) }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _uiState.update { it.copy(likeError = true) }
+            }
+        }
+    }
     fun filterCompleted(value: Boolean) { _uiState.update { it.copy(completedOnly = value) } }
     fun toggleSort() { _uiState.update { it.copy(oldestFirst = !it.oldestFirst) } }
 }

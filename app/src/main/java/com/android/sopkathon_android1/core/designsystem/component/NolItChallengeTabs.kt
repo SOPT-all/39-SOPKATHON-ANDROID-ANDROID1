@@ -60,6 +60,8 @@ fun NolItChallengeTabs(
                         },
                     )
                     .selectable(
+                        interactionSource = null,
+                        indication = null,
                         selected = selected,
                         onClick = { onTabSelected(tab) },
                         role = Role.Tab,

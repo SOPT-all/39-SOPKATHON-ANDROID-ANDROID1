@@ -33,7 +33,7 @@ class HyeminDetailViewModel @Inject constructor(
         loadJob = viewModelScope.launch {
             _uiState.update { it.copy(loading = true, message = null) }
             try {
-                val mission = repository.getMissions().firstOrNull { it.id == missionId }
+                val mission = repository.getMissions().firstOrNull { it.missionId.toString() == missionId }
                 val draft = repository.getDraft(missionId) ?: HyeminMissionDraft()
                 review.edit { replace(0, length, draft.review) }
                 _uiState.update { it.copy(mission = mission, loading = false, photo = draft.photo, liked = draft.liked) }
