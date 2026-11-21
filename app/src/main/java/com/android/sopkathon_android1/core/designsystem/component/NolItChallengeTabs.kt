@@ -35,6 +35,7 @@ fun NolItChallengeTabs(
     selectedTab: ChallengeTab,
     onTabSelected: (ChallengeTab) -> Unit,
     modifier: Modifier = Modifier,
+    ourLabel: String = "우리의 도전",
 ) {
     Row(
         modifier = modifier
@@ -67,7 +68,7 @@ fun NolItChallengeTabs(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = if (tab == ChallengeTab.MY) "내 도전" else "우리의 도전",
+                    text = if (tab == ChallengeTab.MY) "내 도전" else ourLabel,
                     modifier = Modifier.fillMaxWidth(),
                     style = if (selected && tab == ChallengeTab.OUR) {
                         NolItTheme.typography.body2Sb
