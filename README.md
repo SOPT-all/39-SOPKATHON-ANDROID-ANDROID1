@@ -24,6 +24,10 @@
 | Should | 좋아요                        |
 | Could | 마이페이지                      |
 
+## 시연영상
+
+유튜브 링크 : https://youtube.com/shorts/NScQxqMOFXE?si=NcpQv-_taU1rqD2K
+
 
 ## 🛠 기술 스택
 
