@@ -2,6 +2,7 @@ package com.android.sopkathon_android1.feature.eunji
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -26,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
@@ -83,85 +86,95 @@ fun EunjiScreen(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
 
-    LazyColumn(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .background(color = NolItTheme.colors.background)
+            .background(color = NolItTheme.colors.background),
     ) {
-        item{NolItHeader()}
-
-        item { Spacer(modifier = Modifier.height(16.dp)) }
-
-        item{
-            Text(
-                text = "오늘의 추천 미션",
-                color = NolItTheme.colors.textPrimary,
-                style = NolItTheme.typography.h1Sb,
-                modifier = Modifier.padding(horizontal = 20.dp),
+        if (uiState.loading) {
+            CircularProgressIndicator(
+                color = NolItTheme.colors.secondary,
+                modifier = Modifier.align(Alignment.Center),
             )
-        }
-
-        item { Spacer(modifier = Modifier.height(16.dp)) }
-
-        item {
-            HorizontalPager(
-                state = recommendPagerState,
-                pageSize = PageSize.Fixed(280.dp),
-                contentPadding = PaddingValues(horizontal = 20.dp),
-                pageSpacing = 10.dp,
-                modifier = Modifier.fillMaxWidth(),
-            ) { page ->
-                val mission = uiState.recommendMissions[page]
-                NolItHomeDailyPickCard(
-                    title = mission.title,
-                    imgRes = mission.imgRes,
-                    onClick = {},
-                    modifier = Modifier.aspectRatio(280f / 240f),
-                )
-            }
-        }
-
-        item { Spacer(modifier = Modifier.height(34.dp)) }
-
-        item{
-            Text(
-                text = "요즘 뜨는 미션",
-                color = NolItTheme.colors.textPrimary,
-                style = NolItTheme.typography.h2Sb,
-                modifier = Modifier.padding(horizontal = 20.dp),
-            )
-        }
-
-        item { Spacer(modifier = Modifier.height(4.dp)) }
-
-        itemsIndexed(uiState.hypeMissions.chunked(2)) { rowIndex, rowMissions ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .padding(top = if (rowIndex == 0) 0.dp else 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize()
             ) {
-                rowMissions.forEach { mission ->
-                    HomeMissionCard(
-                        imgUrl = mission.imgUrl,
+                NolItHeader()
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "오늘의 추천 미션",
+                    color = NolItTheme.colors.textPrimary,
+                    style = NolItTheme.typography.h1Sb,
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                HorizontalPager(
+                    state = recommendPagerState,
+                    pageSize = PageSize.Fixed(280.dp),
+                    contentPadding = PaddingValues(horizontal = 20.dp),
+                    pageSpacing = 10.dp,
+                    modifier = Modifier.fillMaxWidth(),
+                ) { page ->
+                    val mission = uiState.recommendMissions[page]
+                    NolItHomeDailyPickCard(
                         title = mission.title,
-                        content = mission.content,
-                        onCardClick = {onCardClick(mission.missionId)},
-                        onPlusClick = {onPlusClick(mission.missionId)},
-                        modifier = Modifier.weight(1f),
+                        imgRes = mission.imgRes,
+                        onClick = {},
+                        modifier = Modifier.aspectRatio(280f / 240f),
                     )
                 }
 
-                // 마지막 줄이 1개일 때 카드가 한 줄을 다 차지하지 않도록 빈 칸 유지
-                if (rowMissions.size < 2) {
-                    Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(34.dp))
+
+                Text(
+                    text = "요즘 뜨는 미션",
+                    color = NolItTheme.colors.textPrimary,
+                    style = NolItTheme.typography.h2Sb,
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                LazyColumn(
+
+                ) {
+                    itemsIndexed(uiState.hypeMissions.chunked(2)) { rowIndex, rowMissions ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp)
+                                .padding(top = if (rowIndex == 0) 0.dp else 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            rowMissions.forEach { mission ->
+                                HomeMissionCard(
+                                    imgUrl = mission.imgUrl,
+                                    title = mission.title,
+                                    content = mission.content,
+                                    onCardClick = {onCardClick(mission.missionId)},
+                                    onPlusClick = {onPlusClick(mission.missionId)},
+                                    modifier = Modifier.weight(1f),
+                                )
+                            }
+
+                            // 마지막 줄이 1개일 때 카드가 한 줄을 다 차지하지 않도록 빈 칸 유지
+                            if (rowMissions.size < 2) {
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
+                        }
+                    }
+
+                    item { Spacer(modifier = Modifier.height(47.dp)) }
                 }
             }
         }
-
-        item { Spacer(modifier = Modifier.height(47.dp)) }
     }
+
 
     val missionDetail = uiState.missionDetail
     if (showBottomSheet) {
@@ -169,83 +182,94 @@ fun EunjiScreen(
             onDismissRequest = onBottomSheetDismiss,
             sheetState = sheetState,
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 30.dp)
-                ) {
-                    Spacer(modifier = Modifier.height(27.dp))
-
-                    Text(
-                        text = "미션 상세",
-                        color = NolItTheme.colors.textPrimary,
-                        style = NolItTheme.typography.body1Sb
-                    )
-
-                    Spacer(modifier = Modifier.height(21.dp))
-
-                    BaseAsyncImage(
-                        imgUrl = missionDetail.imageUrl,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .aspectRatio(300f/230f)
-                    )
-
-                    Spacer(modifier = Modifier.height(21.dp))
-
-                    Text(
-                        text = missionDetail.title,
-                        color = NolItTheme.colors.textPrimary,
-                        style = NolItTheme.typography.h2Sb
-                    )
-
-                    Text(
-                        text = missionDetail.writerName,
-                        color = NolItTheme.colors.textSecondary,
-                        style = NolItTheme.typography.body1Sb
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = missionDetail.description,
-                        color = NolItTheme.colors.textPrimary,
-                        style = NolItTheme.typography.body2Md
-                    )
-
-                    Spacer(modifier = Modifier.height(21.dp))
-
-                    Text(
-                        text = "이렇게 체험해요",
-                        color = NolItTheme.colors.textPrimary,
-                        style = NolItTheme.typography.body1Sb
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = missionDetail.instructions,
-                        color = NolItTheme.colors.textPrimary,
-                        style = NolItTheme.typography.body2Md
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-
-                CtaButton(
-                    text = "내 도전에 담기",
-                    onClick = {
-                        selectedMissionId?.let(onPlusClick)
-                        coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                            if (!sheetState.isVisible) onBottomSheetDismiss()
-                        }
-                    },
+            if (uiState.detailLoading) {
+                Box(
                     modifier = Modifier
-                        .padding(horizontal = 25.dp)
-                )
+                        .fillMaxWidth()
+                        .height(400.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator(color = NolItTheme.colors.secondary)
+                }
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.padding(horizontal = 30.dp)
+                    ) {
+                        Spacer(modifier = Modifier.height(27.dp))
 
-                Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            text = "미션 상세",
+                            color = NolItTheme.colors.textPrimary,
+                            style = NolItTheme.typography.body1Sb
+                        )
+
+                        Spacer(modifier = Modifier.height(21.dp))
+
+                        BaseAsyncImage(
+                            imgUrl = missionDetail.imageUrl,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .aspectRatio(300f/230f)
+                        )
+
+                        Spacer(modifier = Modifier.height(21.dp))
+
+                        Text(
+                            text = missionDetail.title,
+                            color = NolItTheme.colors.textPrimary,
+                            style = NolItTheme.typography.h2Sb
+                        )
+
+                        Text(
+                            text = missionDetail.writerName,
+                            color = NolItTheme.colors.textSecondary,
+                            style = NolItTheme.typography.body1Sb
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = missionDetail.description,
+                            color = NolItTheme.colors.textPrimary,
+                            style = NolItTheme.typography.body2Md
+                        )
+
+                        Spacer(modifier = Modifier.height(21.dp))
+
+                        Text(
+                            text = "이렇게 체험해요",
+                            color = NolItTheme.colors.textPrimary,
+                            style = NolItTheme.typography.body1Sb
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = missionDetail.instructions,
+                            color = NolItTheme.colors.textPrimary,
+                            style = NolItTheme.typography.body2Md
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+
+                    CtaButton(
+                        text = "내 도전에 담기",
+                        onClick = {
+                            selectedMissionId?.let(onPlusClick)
+                            coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) onBottomSheetDismiss()
+                            }
+                        },
+                        modifier = Modifier
+                            .padding(horizontal = 25.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
             }
         }
     }
@@ -257,6 +281,7 @@ private fun EunjiScreenPreview() {
     NolItTheme {
         EunjiScreen(
             uiState = EunjiUiState(
+                loading = false,
                 recommendMissions = listOf(
                     HomeRecommendUiModel(imgRes = R.drawable.img_home_recommend_1, title = "치즈 슬랑이 만져보기"),
                     HomeRecommendUiModel(imgRes = R.drawable.img_recommend_2, title = "집에서 한정선 만들기"),
