@@ -60,7 +60,7 @@ val defaultSOPKATHONANDROID1Typography: SOPKATHONANDROID1Typography
     @Composable get() {
         val baseStyle = TextStyle(
             fontFamily = pretendard,
-            color = defaultSOPKATHONANDROID1Colors.black,
+            color = defaultSOPKATHONANDROID1Colors.textPrimary,
         )
         return SOPKATHONANDROID1Typography(
             h1Sb = baseStyle.copy(
