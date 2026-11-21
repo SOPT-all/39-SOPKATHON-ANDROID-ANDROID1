@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,7 +54,6 @@ fun NolItTextField(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(if (singleLine) 48.dp else 120.dp)
                 .background(
                     color = if (isActive) NolItTheme.colors.primarySoft else NolItTheme.colors.neutral100,
                     shape = RoundedCornerShape(12.dp),
@@ -73,15 +70,17 @@ fun NolItTextField(
                     },
                 )
                 .padding(
-                    horizontal = if (singleLine) 13.dp else 12.dp,
-                    vertical = if (singleLine) 14.dp else 12.dp,
+                    start = if (singleLine) 13.dp else 12.dp,
+                    end = if (singleLine) 13.dp else 12.dp,
+                    top = if (singleLine) 14.dp else 12.dp,
+                    bottom = if (singleLine) 14.dp else 88.dp,
                 ),
             contentAlignment = if (singleLine) Alignment.CenterStart else Alignment.TopStart,
         ) {
             BasicTextField(
                 state = state,
                 modifier = Modifier
-                    .then(if (singleLine) Modifier.fillMaxWidth() else Modifier.fillMaxSize())
+                    .fillMaxWidth()
                     .onFocusChanged { isFocused = it.isFocused },
                 inputTransformation = InputTransformation.maxLength(maxLength),
                 lineLimits = lineLimits,
@@ -102,9 +101,10 @@ fun NolItTextField(
             )
         }
 
-        Spacer(modifier = Modifier.height(5.dp))
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp),
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically,
         ) {

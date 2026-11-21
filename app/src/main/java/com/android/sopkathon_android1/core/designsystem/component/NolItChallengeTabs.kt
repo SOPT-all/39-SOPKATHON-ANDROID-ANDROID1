@@ -4,9 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
@@ -41,7 +39,6 @@ fun NolItChallengeTabs(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(40.dp)
             .clip(RoundedCornerShape(30.dp))
             .background(NolItTheme.colors.secondary)
             .padding(4.dp)
@@ -54,7 +51,6 @@ fun NolItChallengeTabs(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxHeight()
                     .then(
                         if (selected) {
                             Modifier.background(NolItTheme.colors.primary, RoundedCornerShape(20.dp))
@@ -66,7 +62,8 @@ fun NolItChallengeTabs(
                         selected = selected,
                         onClick = { onTabSelected(tab) },
                         role = Role.Tab,
-                    ),
+                    )
+                    .padding(vertical = 6.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(

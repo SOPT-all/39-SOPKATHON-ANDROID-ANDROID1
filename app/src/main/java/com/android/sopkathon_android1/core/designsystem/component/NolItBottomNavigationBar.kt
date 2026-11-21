@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
@@ -44,7 +43,6 @@ fun NolItBottomNavigationBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(67.dp)
                 .padding(horizontal = 26.dp)
                 .selectableGroup(),
             horizontalArrangement = Arrangement.SpaceBetween,
