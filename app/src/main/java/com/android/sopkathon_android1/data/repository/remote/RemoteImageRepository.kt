@@ -2,6 +2,8 @@ package com.android.sopkathon_android1.data.repository.remote
 
 import com.android.sopkathon_android1.core.network.errorCodeOrNull
 import com.android.sopkathon_android1.data.datasource.remote.ImageRemoteDataSource
+import com.android.sopkathon_android1.data.datasource.MAX_IMAGE_SIZE_BYTES
+import com.android.sopkathon_android1.data.model.ImageUploadValidationException
 import com.android.sopkathon_android1.data.model.UploadedImage
 import com.android.sopkathon_android1.data.repository.ImageRepository
 import java.io.File
@@ -17,8 +19,15 @@ class RemoteImageRepository @Inject constructor(
 ) : ImageRepository {
     override suspend fun uploadImage(file: File, mimeType: String): UploadedImage =
         withContext(Dispatchers.IO) {
-            require(mimeType in SUPPORTED_MIME_TYPES) { "JPEG, PNG, WebP 이미지만 업로드할 수 있습니다." }
-            require(file.isFile && file.canRead() && file.length() > 0) { "읽을 수 있는 이미지 파일이 필요합니다." }
+            if (mimeType !in SUPPORTED_MIME_TYPES) {
+                throw ImageUploadValidationException("IMAGE_TYPE_NOT_SUPPORTED")
+            }
+            if (!file.isFile || !file.canRead() || file.length() == 0L) {
+                throw ImageUploadValidationException("IMAGE_EMPTY")
+            }
+            if (file.length() > MAX_IMAGE_SIZE_BYTES) {
+                throw ImageUploadValidationException("IMAGE_SIZE_EXCEEDED")
+            }
 
             val response = dataSource.uploadImage(file, mimeType)
             if (!response.isSuccessful) {
@@ -26,7 +35,7 @@ class RemoteImageRepository @Inject constructor(
             }
             val body = response.body()
             val image = body?.data
-            if (image == null || image.imageKey.isBlank() || image.imageUrl.isBlank()) {
+            if (body?.code != "IMAGE_UPLOAD_SUCCESS" || image == null || image.imageKey.isBlank() || image.imageUrl.isBlank()) {
                 throw ImageUploadException(response.code(), body?.code)
             }
             UploadedImage(imageKey = image.imageKey, imageUrl = image.imageUrl)

@@ -2,6 +2,7 @@ package com.android.sopkathon_android1.data.repository.remote
 
 import com.android.sopkathon_android1.data.api.ImageApi
 import com.android.sopkathon_android1.data.datasource.remote.ImageRemoteDataSource
+import com.android.sopkathon_android1.data.model.ImageUploadValidationException
 import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
@@ -35,7 +36,7 @@ class RemoteImageRepositoryTest {
                 assertTrue(body.contains("name=\"file\"; filename=\"upload.jpg\""))
                 assertTrue(body.contains("Content-Type: $mimeType"))
                 assertTrue(body.contains("image-bytes"))
-                response(request, 200, """{"status":200,"code":"SUCCESS","message":"ok","data":{"imageKey":"missions/test.jpg","imageUrl":"https://example.com/test.jpg"}}""")
+                response(request, 200, """{"status":200,"code":"IMAGE_UPLOAD_SUCCESS","message":"ok","data":{"imageKey":"missions/test.jpg","imageUrl":"https://example.com/test.jpg"}}""")
             }
 
             val result = repository.uploadImage(imageFile(), mimeType)
@@ -48,11 +49,11 @@ class RemoteImageRepositoryTest {
     @Test
     fun `HTTP 오류에서 서버 코드를 보존한다`() = runTest {
         val repository = repository { request ->
-            response(request, 400, """{"status":400,"code":"INVALID_IMAGE","message":"오류","data":null}""")
+            response(request, 400, """{"status":400,"code":"IMAGE_TYPE_NOT_SUPPORTED","message":"오류","data":null}""")
         }
         val error = expectFailure<ImageUploadException> { repository.uploadImage(imageFile(), "image/jpeg") }
         assertEquals(400, error.httpStatus)
-        assertEquals("INVALID_IMAGE", error.code)
+        assertEquals("IMAGE_TYPE_NOT_SUPPORTED", error.code)
     }
 
     @Test
@@ -66,7 +67,7 @@ class RemoteImageRepositoryTest {
     @Test
     fun `성공 응답에 업로드 결과가 없으면 실패한다`() = runTest {
         val repository = repository { request ->
-            response(request, 200, """{"status":200,"code":"SUCCESS","message":"ok","data":null}""")
+            response(request, 200, """{"status":200,"code":"IMAGE_UPLOAD_SUCCESS","message":"ok","data":null}""")
         }
         expectFailure<ImageUploadException> { repository.uploadImage(imageFile(), "image/jpeg") }
     }
@@ -74,10 +75,27 @@ class RemoteImageRepositoryTest {
     @Test
     fun `지원하지 않는 형식과 빈 파일은 요청하지 않는다`() = runTest {
         val repository = repository { error("네트워크 요청이 발생하면 안 됩니다.") }
-        expectFailure<IllegalArgumentException> { repository.uploadImage(imageFile(), "image/gif") }
-        expectFailure<IllegalArgumentException> {
+        assertEquals("IMAGE_TYPE_NOT_SUPPORTED", expectFailure<ImageUploadValidationException> { repository.uploadImage(imageFile(), "image/gif") }.code)
+        assertEquals("IMAGE_EMPTY", expectFailure<ImageUploadValidationException> {
             repository.uploadImage(temporaryFolder.newFile(), "image/png")
+        }.code)
+    }
+
+    @Test
+    fun `10MB 초과 이미지는 서버에 보내지 않는다`() = runTest {
+        val repository = repository { error("네트워크 요청이 발생하면 안 됩니다.") }
+        val oversized = temporaryFolder.newFile().apply { writeBytes(ByteArray(10 * 1024 * 1024 + 1)) }
+        val error = expectFailure<ImageUploadValidationException> { repository.uploadImage(oversized, "image/jpeg") }
+        assertEquals("IMAGE_SIZE_EXCEEDED", error.code)
+    }
+
+    @Test
+    fun `200 응답이어도 성공 코드가 다르면 실패한다`() = runTest {
+        val repository = repository { request ->
+            response(request, 200, """{"status":200,"code":"OTHER_CODE","message":"오류","data":{"imageKey":"missions/test.jpg","imageUrl":"https://example.com/test.jpg"}}""")
         }
+        val error = expectFailure<ImageUploadException> { repository.uploadImage(imageFile(), "image/jpeg") }
+        assertEquals("OTHER_CODE", error.code)
     }
 
     @Test
