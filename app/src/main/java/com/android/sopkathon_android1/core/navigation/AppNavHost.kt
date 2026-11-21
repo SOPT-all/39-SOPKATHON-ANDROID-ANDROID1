@@ -1,6 +1,5 @@
 package com.android.sopkathon_android1.core.navigation
 
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -60,15 +59,13 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         NavHost(
             navController = navController,
             startDestination = Main,
-            modifier = Modifier
-                .padding(innerPadding)
-                .consumeWindowInsets(innerPadding),
+            modifier = Modifier.padding(innerPadding),
         ) {
             mainNavGraph()
             eunjiNavGraph()
             hyeminNavGraph(onMissionClick = { navController.navigateToHyeminDetail(it) })
             hyeminDetailNavGraph(onBack = { navController.popBackStack() })
-            heejinNavGraph()
+            heejinNavGraph(contentPadding = innerPadding)
             seungyeonNavGraph()
         }
     }

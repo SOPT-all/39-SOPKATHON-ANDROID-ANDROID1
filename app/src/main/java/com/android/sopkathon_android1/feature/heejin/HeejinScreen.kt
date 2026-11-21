@@ -6,6 +6,8 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -38,6 +40,7 @@ import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 @Composable
 fun HeejinRoute(
     onSubmit: (HeejinMissionDraft) -> Unit = {},
+    contentPadding: PaddingValues = PaddingValues(),
     viewModel: HeejinViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -50,6 +53,7 @@ fun HeejinRoute(
             photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         },
         onSubmitClick = { viewModel.prepareSubmission()?.let(onSubmit) },
+        modifier = Modifier.consumeWindowInsets(contentPadding),
     )
 }
 
