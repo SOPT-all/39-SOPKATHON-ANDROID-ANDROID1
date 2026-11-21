@@ -64,6 +64,7 @@ fun NolItToast(
         } else {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
                     painter = painterResource(type.iconRes),
@@ -82,7 +83,7 @@ fun NolItToast(
     }
 }
 
-@Preview(showBackground = true, widthDp = 196, heightDp = 194)
+@Preview(showBackground = true, widthDp = 215, heightDp = 194)
 @Composable
 private fun NolItToastPreview() {
     NolItTheme {
