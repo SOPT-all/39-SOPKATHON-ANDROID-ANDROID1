@@ -1,8 +1,7 @@
-package com.android.sopkathon_android1.core.designsystem.component.tag
+package com.android.sopkathon_android1.core.designsystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -22,7 +21,6 @@ fun InfoTag(
 ) {
     Box(
         modifier = modifier
-            .heightIn(min = 28.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(NolItTheme.colors.secondary)
             .padding(horizontal = 8.dp, vertical = 5.dp),

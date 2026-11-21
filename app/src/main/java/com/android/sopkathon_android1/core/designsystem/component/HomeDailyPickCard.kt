@@ -1,7 +1,6 @@
-package com.android.sopkathon_android1.core.designsystem.component.card
+package com.android.sopkathon_android1.core.designsystem.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,29 +17,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import com.android.sopkathon_android1.core.designsystem.component.tag.InfoTag
+import com.android.sopkathon_android1.core.designsystem.extension.noRippleClickable
 import com.android.sopkathon_android1.core.designsystem.theme.NolItTheme
 
 @Composable
 fun HomeDailyPickCard(
     title: String,
-    imageModel: Any?,
+    imageUrl: String?,
     authorName: String,
     studentType: String,
     durationText: String,
     categoryText: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    imageContentDescription: String? = null,
 ) {
-    val placeholder = ColorPainter(NolItTheme.colors.surface)
     val authorText = listOf(authorName, studentType)
         .filter { it.isNotBlank() }
         .joinToString(" · ")
@@ -51,14 +46,11 @@ fun HomeDailyPickCard(
             .heightIn(min = 258.dp)
             .clip(RoundedCornerShape(30.dp))
             .background(NolItTheme.colors.surface)
-            .clickable(role = Role.Button, onClick = onClick),
+            .noRippleClickable(role = Role.Button, onClick = onClick),
     ) {
-        AsyncImage(
-            model = imageModel,
-            contentDescription = imageContentDescription,
-            placeholder = placeholder,
-            error = placeholder,
-            fallback = placeholder,
+        BaseAsyncImage(
+            imgUrl = imageUrl,
+            contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.matchParentSize(),
         )
@@ -103,7 +95,7 @@ private fun HomeDailyPickCardPreview() {
     NolItTheme {
         HomeDailyPickCard(
             title = "치즈 슬랑이 만져보기",
-            imageModel = null,
+            imageUrl = null,
             authorName = "지우",
             studentType = "고등학생",
             durationText = "15m",

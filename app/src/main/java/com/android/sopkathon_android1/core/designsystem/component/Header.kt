@@ -1,4 +1,4 @@
-package com.android.sopkathon_android1.core.designsystem.component.header
+package com.android.sopkathon_android1.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,7 +36,7 @@ fun Header(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(modifier = Modifier.width(91.dp)) {
+        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
             Image(
                 painter = painterResource(R.drawable.img_logo),
                 contentDescription = "로고",
